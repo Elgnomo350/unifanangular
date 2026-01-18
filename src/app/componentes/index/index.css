@@ -59,3 +59,95 @@
 .producte{
     margin-bottom: 2em;
 }
+
+
+@media (min-width: 768px){
+    .banner{
+        width: 90%;
+        margin: 7em auto 2em auto;
+        border-radius: 5em;
+    }
+
+    .banner img{
+        width: 80%;
+        height: auto;
+        margin: auto;
+        border-radius: 5em;
+        padding: 4em;
+    }
+
+    .banner p{
+        width: 80%;
+        align-self: center;
+        text-align: center;
+    }
+}
+
+
+@media (min-width: 768px){
+    .destacados{
+        border-radius: 5em;
+        width: 90%;
+        margin-bottom: 2em;
+    }
+
+    .destacados-header{
+        margin: 1em 0;
+        margin-bottom: 2em;
+        border-radius: 5em;  
+        padding: 0 2em;
+    }
+
+    .destacados-header h2{
+        font-size: 3em;
+        margin-bottom: 0.5em;
+    }
+
+    .destacados-header p{
+        font-size: 1.5em;
+    }
+
+    .destacados-panel{
+        margin: 1em 0;
+        gap: 5em;
+    }
+
+    .destacados-footer button{
+        border-radius: 4em;
+    }
+}
+
+@media (max-width: 767px){
+    .destacados{
+        border-radius: 3em;
+        width: 90%;
+        margin-bottom: 2em;
+    }
+
+    .destacados-header{
+        margin: 0.8em 0;
+        width: 80%;
+        margin-bottom: 2em;
+        border-radius: 5em;  
+        padding: 0 1em;
+    }
+
+    .destacados-header h2{
+        font-size: 3em;
+        margin-bottom: 0.5em;
+    }
+
+    .destacados-header p{
+        font-size: 1.5em;
+    }
+
+    .destacados-panel{
+        justify-content: center;
+        margin: 1em 0;
+        gap: 5em;
+    }
+
+    .destacados-footer button{
+        border-radius: 4em;
+    }
+}

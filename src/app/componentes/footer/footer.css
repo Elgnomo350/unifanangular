@@ -55,3 +55,14 @@ footer a:hover {
     filter: drop-shadow(0 0 10px #ff1e1e);
 }
 
+@media (min-width: 768px){
+    footer{
+        height: 2em;
+        width: 100%;
+        font-size: 0.9em;
+    }
+
+    footer p{
+        margin: 0;
+    }
+}

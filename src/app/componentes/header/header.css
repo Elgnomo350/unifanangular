@@ -88,3 +88,100 @@ header{
   font-size: 0.8rem;
   font-weight: bold;
 }
+
+@media (min-width: 768px){
+    header{
+        padding: 1rem 3%;
+        width: 100%;
+        position: fixed;
+    }
+
+    .logo h1{
+        font-size: 1.5rem;
+    }
+
+    .logo img{
+        height: 3rem;
+    }
+
+    .botones-header{
+        width: auto;
+        gap: 0.5em;
+    }
+
+    .botones-header button{
+        border-radius: 5rem;
+        letter-spacing: 0.05rem;
+    }
+
+    .icon{
+        margin-right: 5em;
+    }
+
+    .icon img{
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+}
+
+@media (max-width: 767px){
+    header{
+        padding: 1rem 3%;
+        width: 100%;
+        flex-wrap: wrap; 
+        gap: 1rem; 
+    }
+
+    .logo{
+        flex: 1 1 auto; 
+        min-width: 2em; 
+    }
+
+    .logo h1{
+        font-size: 1.5rem;
+    }
+
+    .logo img{
+        height: 3rem;
+    }
+
+    .botones-header{
+        order: 3; 
+        width: 100%; 
+        gap: 0.5em;
+        margin: 0;
+        justify-content: center;
+    }
+
+    .botones-header button{
+        border-radius: 5rem;
+        letter-spacing: 0.05rem;
+        flex: 1;
+        padding: 0.5em 1em;
+    }
+
+    .botones-header button:hover{
+        letter-spacing: 0.1em;
+    }
+
+    .botones-header{
+        width: auto;
+        gap: 0.5em;
+        margin: 0 2em;
+    }
+
+    .botones-header button{
+        border-radius: 5rem;
+        letter-spacing: 0.05rem;
+    }
+
+    .botones-header button:hover{
+        letter-spacing: 0.1em;
+    }
+
+    .icon{
+        order: 2;
+        margin-left: auto;
+        margin-right: 2em;
+    }
+}
