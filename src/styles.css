@@ -1,1 +1,322 @@
-/* You can add global styles to this file, and also import other style files */
+/*Parametres globals*/
+
+/*Parametres de body y html*/
+html, body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background-color: #0b0b0b;
+    color: #f5f5f5;
+}
+
+/*Regles dels elements d'angular*/
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.contenido {
+  flex: 1;
+}
+
+.producte{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 2em;
+  width: 20em;
+  transition: transform 0.3s, box-shadow 0.3s;
+  background: linear-gradient(145deg, #5a0000, #400101);
+  box-shadow: 0 0 15px rgba(255, 50, 50, 0.2);
+}
+
+.producte:hover{
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px #ff0000;
+}
+
+.producte img{
+  width: 80%;
+  margin: 1em 0;
+  height: 40%;
+  object-fit: contain;
+  border-radius: 1em;
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+}
+
+.info{
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  color: #fbeeff;
+}
+
+.info h3{
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+.info p{
+  font-size: 0.95em;
+  margin-bottom: 0.5em;
+}
+
+.destacados-footer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.precio{
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #ff6666;
+}
+
+.destacados-footer button{
+  color: white;
+  background-color: #8B0000;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5em;
+  font-weight: bolder;
+  transition: 0.5s;
+  border-radius: 2em;
+  box-shadow: 0 0 10px #ff0000;
+}
+
+.destacados-footer button:hover{
+  background-color: #ff1e1e;
+  box-shadow: 0 0 25px #ff0000;
+}
+
+
+/*Parametres per pantalles grans*/
+@media (min-width: 768px){
+
+  /*Header*/
+    header{
+        padding: 1rem 3%;
+        width: 100%;
+        position: fixed;
+    }
+
+    .logo h1{
+        font-size: 1.5rem;
+    }
+
+    .logo img{
+        height: 3rem;
+    }
+
+    .botones-header{
+        width: auto;
+        gap: 0.5em;
+    }
+
+    .botones-header button{
+        border-radius: 5rem;
+        letter-spacing: 0.05rem;
+    }
+
+    .icon{
+      margin-right: 5em;
+    }
+
+    .icon img{
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+    
+  /*Banner*/
+    .banner{
+        width: 90%;
+        margin: 7em auto 2em auto;
+        border-radius: 5em;
+    }
+
+    .banner img{
+        width: 80%;
+        height: auto;
+        margin: auto;
+        border-radius: 5em;
+        padding: 4em;
+    }
+
+    .banner p{
+        width: 80%;
+        align-self: center;
+        text-align: center;
+    }
+
+  /*Productes destacats*/
+    .destacados{
+        border-radius: 5em;
+        width: 90%;
+        margin-bottom: 2em;
+    }
+
+    .destacados-header{
+        margin: 1em 0;
+        margin-bottom: 2em;
+        border-radius: 5em;  
+        padding: 0 2em;
+    }
+
+    .destacados-header h2{
+        font-size: 3em;
+        margin-bottom: 0.5em;
+    }
+
+    .destacados-header p{
+        font-size: 1.5em;
+    }
+
+    .destacados-panel{
+        margin: 1em 0;
+        gap: 5em;
+    }
+
+    .destacados-footer button{
+        border-radius: 4em;
+    }
+
+  /*Footer*/
+    footer{
+    height: 2em;
+    width: 100%;
+    font-size: 0.9em;
+    }
+
+    footer p{
+        margin: 0;
+    }
+}
+
+  /*Paràmetres per pantalles petites*/
+  @media (max-width: 767px){
+
+    /*Header*/
+    header{
+        padding: 1rem 3%;
+        width: 100%;
+        flex-wrap: wrap; 
+        gap: 1rem; 
+    }
+
+    .logo{
+        flex: 1 1 auto; 
+        min-width: 2em; 
+    }
+
+    .logo h1{
+        font-size: 1.5rem;
+    }
+
+    .logo img{
+        height: 3rem;
+    }
+
+    .botones-header{
+        order: 3; 
+        width: 100%; 
+        gap: 0.5em;
+        margin: 0;
+        justify-content: center;
+    }
+
+    .botones-header button{
+        border-radius: 5rem;
+        letter-spacing: 0.05rem;
+        flex: 1;
+        padding: 0.5em 1em;
+    }
+
+    .botones-header button:hover{
+        letter-spacing: 0.1em;
+    }
+
+    .icon{
+        order: 2;
+        margin-left: auto;
+        margin-right: 2em;
+    }
+
+    .botones-header{
+        width: auto;
+        gap: 0.5em;
+        margin: 0 2em;
+    }
+
+    .botones-header button{
+        border-radius: 5rem;
+        letter-spacing: 0.05rem;
+    }
+
+    .botones-header button:hover{
+        letter-spacing: 0.1em;
+    }
+
+    /*Banner*/
+    .banner{
+        width: 90%;
+        margin: 2em auto;
+        border-radius: 3em;
+
+    }
+
+    .banner p{
+        width: 80%;
+        align-self: center;
+        text-align: center;
+    }
+
+    .banner img{
+        width: 90%;
+        height: auto;
+        margin: 2em auto;
+        border-radius: 3em;
+    }
+
+    /*Productes destacats*/
+    .destacados{
+        border-radius: 3em;
+        width: 90%;
+        margin-bottom: 2em;
+    }
+
+    .destacados-header{
+        margin: 0.8em 0;
+        width: 80%;
+        margin-bottom: 2em;
+        border-radius: 5em;  
+        padding: 0 1em;
+    }
+
+    .destacados-header h2{
+        font-size: 3em;
+        margin-bottom: 0.5em;
+    }
+
+    .destacados-header p{
+        font-size: 1.5em;
+    }
+
+    .destacados-panel{
+        justify-content: center;
+        margin: 1em 0;
+        gap: 5em;
+    }
+
+    .destacados-footer button{
+        border-radius: 4em;
+    }
+
+    /*No hem necessitat parametres especifics per al footer*/
+  }
