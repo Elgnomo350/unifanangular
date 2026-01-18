@@ -1,21 +1,21 @@
-<p>header works!</p>
 <header>
   <div class="logo">
-    <a href="./index.html"><img src="../public/logosinletras.png" alt="Logo"></a>
-    <a href="./index.html"><h1>Uni<span>Fan</span></h1></a>
+    <a [routerLink]="cgetroute('index')"><img [src]="cgetpath('img/logosinletras.png')" alt="Logo"></a>
+    <a [routerLink]="cgetroute('index')"><h1>Uni<span>Fan</span></h1></a>
   </div>
 
   <div class="botones-header">
-    <button><a href="./HTML/catalogo.html">Catálogo</a></button>
-    <button><a href="./index.html">Destacados</a></button>
-    <button><a href="./HTML/contacte.html">Contacto</a></button>
+    <button><a [routerLink]="cgetroute('catalogo')">Catálogo</a></button>
+    <button><a [routerLink]="cgetroute('index')">Destacados</a></button>
+    <button><a [routerLink]="cgetroute('contacto')">Contacto</a></button>
   </div>
 
   <div class="icon">
-    <a href="./HTML/registreclient.html"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" alt="Perfil"></a>
+    <a [routerLink]="cgetroute('registre')"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" alt="Perfil"></a>
     <div class="cart">
-      <a href="./HTML/cistella.html"><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Carrito"></a>
+      <a [routerLink]="cgetroute('cistella')"><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Carrito"></a>
       <span class="count">0</span>
     </div>
   </div>
 </header>
+
