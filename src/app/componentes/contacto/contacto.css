@@ -1,0 +1,57 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    text-align: center;
+    padding: 4em 2em;
+    box-shadow: inset 0 0 30px darkred;
+    margin-top: 2em;
+}
+
+.contacte {
+    background: linear-gradient(180deg, #2b0000, #100000);
+    border-radius: 3em;
+    padding: 3em;
+    box-shadow: 0 0 25px rgba(139, 0, 0, 0.7);
+}
+
+.contacte h2 {
+    font-size: 2.2em;
+    color: #ffb3b3;
+    margin-bottom: 0.5em;
+}
+
+.contacte p {
+    font-size: 1.2em;
+    color: #e8dada;
+    margin-bottom: 1.5em;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8em;
+    color: #ffcccc;
+    font-size: 1.3em;
+    margin: 1em 0;
+    transition: transform 0.3s;
+}
+
+ul li img {
+    width: 2.5em;
+    height: 2.5em;
+    transition: transform 0.3s;
+}
+
+ul li:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+

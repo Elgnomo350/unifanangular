@@ -1,0 +1,61 @@
+/*Banner*/
+.banner{    
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    background: url("/public/img/fondo-estrellas.jpg");
+    background-size: cover;
+    background-position: center;
+    flex-direction: column;
+    color: white;
+    border-radius: 3em;
+    box-shadow: 0 0 20px rgba(139, 0, 0, 0.6);
+}
+
+.banner p{
+    color: #e8e0e0;
+    font-weight: bold;
+    font-size: larger;
+    text-shadow: 0 0 10px #8B0000;
+}
+
+/*Productes destacats*/
+.destacados{
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+  align-items: center;
+  background-color: #0b0b0b;
+  border-radius: 2em;
+  box-shadow: inset 0 0 30px #8B0000;
+  margin-bottom: 2em;
+}
+
+.destacados-header{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(180deg, #1a0000, #3a0000);
+  border: 1px solid #3A0000FF;
+  border-radius: 2em;
+}
+
+.destacados-panel{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.destacados-header h3 {
+    color: #ffcccc;
+    text-shadow: 0 0 15px #8B0000;
+}
+
+.destacados-header p {
+    font-size: 1.2em;
+    color: #ffb3b3;
+}
+
+.producte{
+    margin-bottom: 2em;
+}
