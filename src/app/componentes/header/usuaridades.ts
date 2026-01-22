@@ -4,29 +4,39 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class Usuaridades {
-  registrat1 = false
-  Usuari1 : string
-  Cognom1 : string
-  Correu : string
-  passwd : string
-  direccio : string
-  Telefon : bigint
 
+  private registrat1 = false;
+  private Usuari1!: string;
+  private Cognom1!: string;
+  private Correu!: string;
+  private passwd!: string;
+  private direccio!: string;
+  private Telefon!: bigint;
 
-  constructor(usr1:string, cog:string, correu:string, pswd:string, direc:string, tel:bigint) {
-    this.Usuari1 = usr1
-    this.Cognom1 = cog
-    this.Correu = correu
-    this.passwd = pswd
-    this.direccio = direc
-    this.Telefon = tel
+  constructor() {}
+
+  public getUserNom() {
+    return this.Usuari1;
   }
 
-  public getUserNom () {
-    return this.Usuari1
+  public getCorreu() {
+    return this.Correu;
   }
 
-  public getCorreu () {
-    return this.Correu
+  public setUsuari(
+    usuari: string,
+    cognom: string,
+    correu: string,
+    passwd: string,
+    direccio: string,
+    telefon: bigint
+  ) {
+    this.Usuari1 = usuari;
+    this.Cognom1 = cognom;
+    this.Correu = correu;
+    this.passwd = passwd;
+    this.direccio = direccio;
+    this.Telefon = telefon;
+    this.registrat1 = true;
   }
 }
