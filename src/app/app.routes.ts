@@ -7,6 +7,7 @@ import { Contacto } from './componentes/contacto/contacto';
 import { Registre } from './componentes/registre/registre';
 import { Index } from './componentes/index';
 
+//parte de la investigacion punto 4.1
 export const routes: Routes = [
     {path: AppPaths['cistella'], component: Cistella},
     {path: AppPaths['catalogo'], component: Catalogo},

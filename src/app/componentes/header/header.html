@@ -11,6 +11,9 @@
   </div>
 
   <div class="icon">
+    @if (registrat) {
+      <b>{{ Usuari }}</b>
+    }
     <a [routerLink]="cgetroute('registre')"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" alt="Perfil"></a>
     <div class="cart">
       <a [routerLink]="cgetroute('cistella')"><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Carrito"></a>
