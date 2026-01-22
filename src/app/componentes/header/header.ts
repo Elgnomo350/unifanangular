@@ -11,6 +11,8 @@ import { Getroute } from '../../serveis/getroute/getroute';
 })
 export class Header {
 
+  //Punto 4.2 de la parte de investigacion
+  Usuari = "Manolo"
   constructor(private getasset: Getasset, private getroute: Getroute){
   }
 
@@ -21,5 +23,5 @@ export class Header {
   public cgetroute(path: string){
     return this.getroute.getroute(path);
   }
-  
+
 }
