@@ -1,1 +1,99 @@
-/* You can add global styles to this file, and also import other style files */
+/*Parametres globals*/
+
+/*Parametres de body y html*/
+html, body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    background-color: #0b0b0b;
+    color: #f5f5f5;
+}
+
+/*Regles dels elements d'angular*/
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.contenido {
+  flex: 1;
+}
+
+.producte{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 2em;
+  width: 20em;
+  transition: transform 0.3s, box-shadow 0.3s;
+  background: linear-gradient(145deg, #5a0000, #400101);
+  box-shadow: 0 0 15px rgba(255, 50, 50, 0.2);
+}
+
+.producte:hover{
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px #ff0000;
+}
+
+.producte img{
+  width: 80%;
+  margin: 1em 0;
+  height: 40%;
+  object-fit: contain;
+  border-radius: 1em;
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+}
+
+.info{
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  color: #fbeeff;
+}
+
+.info h3{
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+.info p{
+  font-size: 0.95em;
+  margin-bottom: 0.5em;
+}
+
+.destacados-footer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.precio{
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #ff6666;
+}
+
+.destacados-footer button{
+  color: white;
+  background-color: #8B0000;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5em;
+  font-weight: bolder;
+  transition: 0.5s;
+  border-radius: 2em;
+  box-shadow: 0 0 10px #ff0000;
+}
+
+.destacados-footer button:hover{
+  background-color: #ff1e1e;
+  box-shadow: 0 0 25px #ff0000;
+}
+
+

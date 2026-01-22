@@ -1,18 +1,17 @@
 import { Component } from '@angular/core';
-import { RouterLink } from "@angular/router";
 import { Getasset } from '../../serveis/getasset/getasset';
+import { RouterLink } from "@angular/router";
 import { Getroute } from '../../serveis/getroute/getroute';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-index',
   imports: [RouterLink],
-  templateUrl: './header.html',
-  styleUrl: './header.css',
+  templateUrl: './index.html',
+  styleUrl: './index.css',
 })
-export class Header {
+export class Index {
 
-  constructor(private getasset: Getasset, private getroute: Getroute){
-  }
+constructor(private getasset: Getasset, private getroute: Getroute){}  
 
   public cgetpath(path: string){
     return this.getasset.getpath(path);
@@ -21,5 +20,5 @@ export class Header {
   public cgetroute(path: string){
     return this.getroute.getroute(path);
   }
-  
+
 }
