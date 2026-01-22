@@ -25,4 +25,8 @@ export class Usuaridades {
   public getUserNom () {
     return this.Usuari1
   }
+
+  public getCorreu () {
+    return this.Correu
+  }
 }
