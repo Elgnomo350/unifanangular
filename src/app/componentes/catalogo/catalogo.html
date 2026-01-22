@@ -1,41 +1,24 @@
+<div id="popup-alerta" class="popup-alerta"></div>
+
 <main class="catalogo">
     <h2>Catálogo de Productos</h2>
-
-    <section class="productos">
-        <article class="producte">
-            <img [src]="cgetpath('img/catalogo/hornet_llavero.png')" alt="Anime">
-            <div class="info">
-                <h3>Llavero de hornet</h3>
-                <p>Shao! Una medioinsecto muy carismatica, que tiene una extraña obsesion
-                    con la savia, y encima cabe en tu bolsillo! </p>
-                <div class="destacados-footer">
-                    <span class="precio">10€</span>
-                    <button>Comprar</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="producte">
+    <main class="productos">
+        <section class="categoria">
+            <h3>Categoria Anime</h3>
+            <article class="producte">
             <img [src]="cgetpath('img/catalogo/senku_funko.jpg')" alt="Anime">
             <div class="info">
-                <h3>Figura de Senku</h3>
+                <h3 id="nombresenku">Figura de Senku</h3>
                 <p>Compra nuestra figura del cientifico mas joven i viejo, viniendo
                     directamente del mundo de piedra! Que malote!</p>
                 <div class="destacados-footer">
-                    <span class="precio">39.99€</span>
-                    <button>Comprar</button>
+                    <span class="precio" id="preciosenku">39.99€</span>
+                    <button (click)="afegirCistella('img/catalogo/senku_funko.jpg', 'nombresenku', 'senku_funko', 'preciosenku')">Comprar</button>
                 </div>
-            </div>
-        </article>
-
-        <article class="producte">
-            <img [src]="cgetpath('img/catalogo/susie_idea.png')" alt="Anime">
-            <div class="info">
-                <h3>Figura de pixel Susie</h3>
-                <p>Una autentica heroina en el mundo de Tenna!</p>
                 <div class="destacados-footer">
-                    <span class="precio">29.99€</span>
-                    <button>Comprar</button>
+                    <button (click)="restar('senku_funko')">-</button>
+                    <h3 id="senku_funko">0</h3>
+                    <button (click)="sumar('senku_funko')">+</button>
                 </div>
             </div>
         </article>
@@ -43,25 +26,18 @@
         <article class="producte">
             <img [src]="cgetpath('img/catalogo/feitan_figura.jpg')" alt="Anime">
             <div class="info">
-                <h3>HxH Feitan figura PVC</h3>
+                <h3 id="nombrefeitan">HxH Feitan figura PVC</h3>
                 <p>Feitan Figura Japón Oficial Hecha de PVC hombre con paraguas
                 perfecto para regalar.</p>
                 <div class="destacados-footer">
-                    <span class="precio">49.99€</span>
-                    <button>Comprar</button>
+                    <span class="precio" id="preciofeitan">49.99€</span>
+                    <button (click)="afegirCistella('img/catalogo/feitan_figura.jpg', 'nombrefeitan', 'feitan_figura', 'preciofeitan')">Comprar</button>
                 </div>
-            </div>
-        </article>
 
-        <article class="producte">
-            <img [src]="cgetpath('img/catalogo/dizfraz_malboro.jpg')" alt="Anime">
-            <div class="info">
-                <h3>Dizfraz cigarro para hombre carnaval</h3>
-                <p>Este divertido disfraz de paquete de cigarrillos para hombre incluye
-                    una túnica y una banda, fabricado en poliéster 100%. </p>
                 <div class="destacados-footer">
-                    <span class="precio">22.14€</span>
-                    <button>Comprar</button>
+                    <button (click)="restar('feitan_figura')">-</button>
+                    <h3 id="feitan_figura">0</h3>
+                    <button (click)="sumar('feitan_figura')">+</button>
                 </div>
             </div>
         </article>
@@ -69,16 +45,134 @@
         <article class="producte">
             <img [src]="cgetpath('img/catalogo/sunny_barco.jpg')" alt="Anime">
             <div class="info">
-                <h3>Barco flotante Thousand sunny</h3>
+                <h3>Barco Thousand sunny</h3>
                 <p>El adorno presenta un diseño
-                    innovador de crucero que nunca se hunde. El líquido azul oscuro
-                    representa el mar y el transparente, el cielo. </p>
+                    innovador de crucero que nunca se hunde, viniendo directamente de One piece! </p>
                 <div class="destacados-footer">
                     <span class="precio">22.99€</span>
                     <button>Comprar</button>
                 </div>
+                <div class="destacados-footer">
+                    <button (click)="restar('sunny_barco')">-</button>
+                    <h3 id="sunny_barco">0</h3>
+                    <button (click)="sumar('sunny_barco')">+</button>
+                </div>
+            </div>
+        </article>
+        </section>
+
+        <section class="categoria">
+            <h3>Categoria Videojocs</h3>
+            <article class="producte">
+            <img [src]="cgetpath('img/catalogo/hornet_llavero.png')" alt="Anime">
+            <div class="info">
+                <h3>Llavero de hornet</h3>
+                <p>Shao! Una medioinsecto que tiene una extraña obsesion
+                    con la savia, y encima cabe en tu bolsillo! </p>
+                <div class="destacados-footer">
+                    <span class="precio">10€</span>
+                    <button>Comprar</button>
+                </div>
+                <div class="destacados-footer">
+                    <button (click)="restar('hornet_llavero')">-</button>
+                    <h3 id="hornet_llavero">0</h3>
+                    <button (click)="sumar('hornet_llavero')">+</button>
+                </div>
             </div>
         </article>
 
-    </section>
+
+        <article class="producte">
+            <img [src]="cgetpath('img/catalogo/susie_idea.png')" alt="Anime">
+            <div class="info">
+                <h3>Figura de pixel Susie</h3>
+                <p>Una autentica heroina en el mundo de Tenna!</p><br>
+                <div class="destacados-footer">
+                    <span class="precio">29.99€</span>
+                    <button>Comprar</button>
+                </div>
+                <div class="destacados-footer">
+                    <button (click)="restar('susie_idea')">-</button>
+                    <h3 id="susie_idea">0</h3>
+                    <button (click)="sumar('susie_idea')">+</button>
+                </div>
+            </div>
+        </article>
+
+        <article class="producte">
+            <img [src]="cgetpath('img/catalogo/ajolote.webp')" alt="Anime">
+            <div class="info">
+                <h3>Minecraft: Ajolote del 10</h3>
+                <p>Un ajolote muy lindo, te acompañara hasta en tus sueños! (Yo si fuera un profe le pondria un 10)</p>
+                <div class="destacados-footer">
+                    <span class="precio">34.99€</span>
+                    <button>Comprar</button>
+                </div>
+
+                <div class="destacados-footer">
+                    <button (click)="restar('ajolote')">-</button>
+                    <h3 id="ajolote">0</h3>
+                    <button (click)="sumar('ajolote')">+</button>
+                </div>                
+            </div>
+        </article>
+        </section>
+        
+        <section class="categoria">
+            <h3>Randoms</h3>
+            <article class="producte">
+            <img [src]="cgetpath('img/catalogo/dizfraz_malboro.jpg')" alt="Anime">
+            <div class="info">
+                <h3>Dizfraz cigarro hombre</h3>
+                <p>Este divertido disfraz de paquete de cigarrillos para hombre incluye
+                    una túnica y una banda.</p>
+                <div class="destacados-footer">
+                    <span class="precio">22.14€</span>
+                    <button>Comprar</button>
+                </div>
+
+                <div class="destacados-footer">
+                    <button (click)="restar('cigarro')">-</button>
+                    <h3 id="cigarro">0</h3>
+                    <button (click)="sumar('cigarro')">+</button>
+                </div>                
+            </div>
+        </article>
+
+        <article class="producte">
+            <img [src]="cgetpath('img/catalogo/LlaveroSandia.avif')" alt="Anime">
+            <div class="info">
+                <h3>Colgante de la sandia loca</h3>
+                <p>Enloquecete teniendo este llavero, llevatelo a todos lados y vive cada dia como si fuera el ultimo!</p>
+                <div class="destacados-footer">
+                    <span class="precio">25.40€</span>
+                    <button>Comprar</button>
+                </div>
+                <div class="destacados-footer">
+                    <button (click)="restar('sandia')">-</button>
+                    <h3 id="sandia">0</h3>
+                    <button (click)="sumar('sandia')">+</button>
+                </div>                
+            </div>
+        </article>
+
+        <article class="producte">
+            <img [src]="cgetpath('img/catalogo/Oro.jpg')" alt="Anime">
+            <div class="info">
+                <h3>1 kilo de oro a precio del mercado</h3>
+                <p>La primera tienda de merchandising mundial que permite la compra de oro!</p>
+                <div class="destacados-footer">
+                    <span class="precio">130.000€</span>
+                    <button>Comprar</button>
+                </div>
+
+                <div class="destacados-footer">
+                    <button (click)="restar('oro')">-</button>
+                    <h3 id="oro">0</h3>
+                    <button (click)="sumar('oro')">+</button>
+                </div>                
+            </div>
+        </article>
+        </section>
+    </main>
 </main>

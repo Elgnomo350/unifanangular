@@ -5,7 +5,6 @@ import { Catalogo } from './componentes/catalogo/catalogo';
 import { Condicions } from './componentes/condicions/condicions';
 import { Contacto } from './componentes/contacto/contacto';
 import { Registre } from './componentes/registre/registre';
-import { App } from './app';
 import { Index } from './componentes/index';
 
 export const routes: Routes = [

@@ -60,6 +60,10 @@
     margin-bottom: 2em;
 }
 
+.destacados-footer a{
+    text-decoration: none;
+    color: white;
+}
 
 @media (min-width: 768px){
     .banner{

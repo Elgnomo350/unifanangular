@@ -49,6 +49,23 @@ body {
     object-fit: fill;
 }
 
+.categoria {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+}
+
+.categoria h3 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    color: white;
+}
+
+
 .info {
     padding: 1rem;
 }
@@ -88,4 +105,31 @@ body {
 
 .destacados-footer button:hover {
     background-color: #EAFDF8;
+}
+
+.destacados-footer h3{
+    font-size: x-large;
+}
+
+.popup-alerta {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+
+  background-color: #ff4d4d;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 6px;
+
+  font-weight: bold;
+  font-size: 14px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 9999;
+}
+
+.popup-alerta.show {
+  opacity: 1;
 }
