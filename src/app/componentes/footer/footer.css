@@ -1,0 +1,68 @@
+/*Footer*/
+.footer {
+    display: flex;
+    width: 100%;
+    background: linear-gradient(90deg, #000, #2b0000);
+    color: #ffbcbc;
+    border-top: 2px solid #8B0000;
+    padding: 1em 2em;
+    box-shadow: 0 -5px 20px rgba(139, 0, 0, 0.5);
+    margin-top: auto;
+}
+
+.footer-left, .footer-center, .footer-right {
+    display: flex;
+    align-items: center;
+}
+
+.footer-center {
+    flex: 1;
+    justify-content: center;
+}
+
+.footer-left {
+    flex: 1;
+    gap: 0.5em;
+    justify-content: left;
+}
+
+.footer-right {
+    flex: 1;
+    justify-content: right;
+    margin-right: 5em;
+}
+
+footer a {
+    color: #ecebeb;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+footer a:hover {
+    color: #fff;
+    text-shadow: 0 0 10px #ff1e1e;
+}
+
+.redes {
+    width: 1.7em;
+    height: auto;
+    filter: brightness(0) invert(1);
+    transition: 0.3s;
+}
+
+.redes:hover {
+    filter: drop-shadow(0 0 10px #ff1e1e);
+}
+
+@media (min-width: 768px){
+    footer{
+        height: 2em;
+        width: 100%;
+        font-size: 0.9em;
+    }
+
+    footer p{
+        margin: 0;
+    }
+}

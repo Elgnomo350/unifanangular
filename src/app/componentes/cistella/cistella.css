@@ -1,0 +1,184 @@
+.cesta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  text-align: center;
+  margin: 8em auto 3em auto;
+  width: 80%;
+  background: linear-gradient(145deg, #1a0000, #3a0000);
+  border-radius: 2em;
+  box-shadow: inset 0 0 30px #8B0000, 0 0 20px rgba(255, 0, 0, 0.3);
+  transition: transform 0.5s ease-out;
+  flex: 1;
+}
+
+.cesta:hover {
+  transform: translateY(-10px);
+}
+
+.cesta h1 {
+  color: #ffcccc;
+  font-size: 2.5em;
+  text-shadow: 0 0 20px red;
+  margin: 0.2em 0;
+  margin-top: 2em;
+}
+
+.cesta h2 {
+  color: #ff9999;
+  font-weight: normal;
+  text-shadow: 0 0 10px #8B0000;
+  margin: 0.2em 0;
+}
+
+.cesta h3 {
+  color: #ffb3b3;
+  font-weight: normal;
+  text-shadow: 0 0 10px #5a0000;
+  margin: 0.2em 0 1em 0;
+}
+
+.cesta a {
+  display: inline-block;
+  background-color: #8B0000;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 0.8em 2em;
+  border-radius: 2em;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+  transition: all 0.4s ease;
+  margin-bottom: 5em;
+}
+
+.cesta a:hover {
+  background-color: #ff1e1e;
+  box-shadow: 0 0 25px red, 0 0 50px rgba(255, 0, 0, 0.4);
+  letter-spacing: 0.1em;
+  transform: scale(1.05);
+}
+
+.item-cesta {
+  display: flex;
+  align-items: center;
+  width: 85%; 
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  border-radius: 2.5em;
+  padding: 2em;
+  margin-bottom: 2em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.producto-img {
+  width: 10em;
+  height: auto;
+  border-radius: 1em;
+  margin: 0;
+  padding: 0
+}
+
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0;
+  margin: 0;
+}
+
+.titulo {
+  font-size: 3em;
+  font-weight: bold;
+  color: black;
+  margin: 0 auto;
+  margin-right: 1.9em;
+  width: 70%;
+}
+
+.cantidad {
+  margin: 0 auto;
+  margin-right: 2.8em;
+  color: gray;
+  font-size: 2em;
+  text-align: center;
+  width: 70%;
+}
+
+.btn-comprar {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 1.5em;
+  font-weight: bold;
+  padding: 0.8em 2em;
+  border: none;
+  border-radius: 1em; 
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  margin-bottom: 1.5em;
+}
+
+.btn-comprar:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+.btn-comprar:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.btn-modcesta{
+  margin-right: 0.5em;
+}
+
+.precio{
+  margin-right: 0.5em;
+}
+
+
+@media (max-width: 768px) {
+  .item-cesta {
+    flex-direction: column;
+    align-items: center;
+    width: 95%;
+    padding: 1.5em;
+    margin-bottom: 1.5em;
+  }
+
+  .producto-img {
+    width: 70%;
+    margin-bottom: 1em;
+  }
+
+  .info {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3em;
+  }
+
+  .titulo {
+    font-size: 2em;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+  }
+
+  .cantidad {
+    font-size: 1.5em;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+  }
+
+  .acciones {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.5em;
+  }
+}
