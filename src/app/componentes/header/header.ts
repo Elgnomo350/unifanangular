@@ -12,6 +12,7 @@ import { Getroute } from '../../serveis/getroute/getroute';
 export class Header {
 
   //Punto 4.2 de la parte de investigacion
+  registrat = true
   Usuari = "Manolo"
   constructor(private getasset: Getasset, private getroute: Getroute){
   }
