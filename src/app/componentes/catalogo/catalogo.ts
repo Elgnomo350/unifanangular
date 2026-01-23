@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { Getasset } from '../../serveis/getasset/getasset';
 import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
-import { timer } from 'rxjs';
-
 
 @Component({
   selector: 'app-catalogo',
@@ -47,13 +45,28 @@ export class Catalogo {
       }
 
       nom = document.getElementById(nom)!.textContent
-      preu = document.getElementById(preu)!.textContent.slice(0, -1)
+      preu = document.getElementById(preu)!.textContent.slice(0, -1).replace(" ", "")
 
       let quantitatcomprada: number = parseInt(idquantitatcomprada)
       let preutotal: number = parseFloat(preu)
 
       this.manejarcistella.afegircistella(foto, nom, quantitatcomprada, preutotal * quantitatcomprada, preutotal)
     }
+
+  filtrar(tipo: string) {
+  const categorias = document.querySelectorAll('.categoria');
+
+  categorias.forEach((categoria: any) => {
+    if (tipo === 'todo') {
+      categoria.style.display = 'flex';
+    } else if (categoria.classList.contains(tipo)) {
+      categoria.style.display = 'flex';
+    } else {
+      categoria.style.display = 'none';
+    }
+  });
+}
+
 }
 
 

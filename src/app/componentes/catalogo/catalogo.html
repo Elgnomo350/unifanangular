@@ -2,8 +2,14 @@
 
 <main class="catalogo">
     <h2>Catálogo de Productos</h2>
+    <div class="filtros">
+    <button (click)="filtrar('todo')">Todo</button>
+    <button (click)="filtrar('anime')">Anime</button>
+    <button (click)="filtrar('videojocs')">Videojuegos</button>
+    <button (click)="filtrar('random')">Random</button>
+    </div>
     <main class="productos">
-        <section class="categoria">
+        <section class="categoria anime">
             <h3>Categoria Anime</h3>
             <article class="producte">
             <img [src]="cgetpath('img/catalogo/senku_funko.jpg')" alt="Anime">
@@ -45,12 +51,12 @@
         <article class="producte">
             <img [src]="cgetpath('img/catalogo/sunny_barco.jpg')" alt="Anime">
             <div class="info">
-                <h3>Barco Thousand sunny</h3>
+                <h3 id="nombrebarcosunny">Barco Thousand sunny</h3>
                 <p>El adorno presenta un diseño
                     innovador de crucero que nunca se hunde, viniendo directamente de One piece! </p>
                 <div class="destacados-footer">
-                    <span class="precio">22.99€</span>
-                    <button>Comprar</button>
+                    <span class="precio" id="sunny_barco_precio">22.99€</span>
+                    <button (click)="afegirCistella('img/catalogo/sunny_barco.jpg', 'nombrebarcosunny', 'sunny_barco', 'sunny_barco_precio')">Comprar</button>
                 </div>
                 <div class="destacados-footer">
                     <button (click)="restar('sunny_barco')">-</button>
@@ -61,17 +67,17 @@
         </article>
         </section>
 
-        <section class="categoria">
+        <section class="categoria videojocs">
             <h3>Categoria Videojocs</h3>
             <article class="producte">
             <img [src]="cgetpath('img/catalogo/hornet_llavero.png')" alt="Anime">
             <div class="info">
-                <h3>Llavero de hornet</h3>
+                <h3 id="nombrehornet">Llavero de hornet</h3>
                 <p>Shao! Una medioinsecto que tiene una extraña obsesion
                     con la savia, y encima cabe en tu bolsillo! </p>
                 <div class="destacados-footer">
-                    <span class="precio">10€</span>
-                    <button>Comprar</button>
+                    <span class="precio" id="hornetprecio">10€</span>
+                    <button (click)="afegirCistella('img/catalogo/hornet_llavero.png', 'nombrehornet', 'hornet_llavero', 'hornetprecio')">Comprar</button>
                 </div>
                 <div class="destacados-footer">
                     <button (click)="restar('hornet_llavero')">-</button>
@@ -85,11 +91,11 @@
         <article class="producte">
             <img [src]="cgetpath('img/catalogo/susie_idea.png')" alt="Anime">
             <div class="info">
-                <h3>Figura de pixel Susie</h3>
+                <h3 id="nombresusieidea">Figura de pixel Susie</h3>
                 <p>Una autentica heroina en el mundo de Tenna!</p><br>
                 <div class="destacados-footer">
-                    <span class="precio">29.99€</span>
-                    <button>Comprar</button>
+                    <span class="precio" id="preciosusieidea">29.99€</span>
+                    <button (click)="afegirCistella('img/catalogo/susie_idea.png', 'nombresusieidea', 'susie_idea', 'preciosusieidea')">Comprar</button>
                 </div>
                 <div class="destacados-footer">
                     <button (click)="restar('susie_idea')">-</button>
@@ -102,11 +108,11 @@
         <article class="producte">
             <img [src]="cgetpath('img/catalogo/ajolote.webp')" alt="Anime">
             <div class="info">
-                <h3>Minecraft: Ajolote del 10</h3>
+                <h3  id="nombreajolote">Minecraft: Ajolote del 10</h3>
                 <p>Un ajolote muy lindo, te acompañara hasta en tus sueños! (Yo si fuera un profe le pondria un 10)</p>
                 <div class="destacados-footer">
-                    <span class="precio">34.99€</span>
-                    <button>Comprar</button>
+                    <span class="precio" id="precioajolote">34.99€</span>
+                    <button (click)="afegirCistella('img/catalogo/ajolote.webp', 'nombreajolote', 'ajolote', 'precioajolote')">Comprar</button>
                 </div>
 
                 <div class="destacados-footer">
@@ -118,17 +124,17 @@
         </article>
         </section>
         
-        <section class="categoria">
+        <section class="categoria random">
             <h3>Randoms</h3>
             <article class="producte">
             <img [src]="cgetpath('img/catalogo/dizfraz_malboro.jpg')" alt="Anime">
             <div class="info">
-                <h3>Dizfraz cigarro hombre</h3>
+                <h3 id="nombrecigarro">Dizfraz cigarro hombre</h3>
                 <p>Este divertido disfraz de paquete de cigarrillos para hombre incluye
                     una túnica y una banda.</p>
                 <div class="destacados-footer">
-                    <span class="precio">22.14€</span>
-                    <button>Comprar</button>
+                    <span class="precio" id="preciocigarro">22.14€</span>
+                    <button (click)="afegirCistella('img/catalogo/dizfraz_malboro.jpg', 'nombrecigarro', 'cigarro', 'preciocigarro')">Comprar</button>
                 </div>
 
                 <div class="destacados-footer">
@@ -142,11 +148,11 @@
         <article class="producte">
             <img [src]="cgetpath('img/catalogo/LlaveroSandia.avif')" alt="Anime">
             <div class="info">
-                <h3>Colgante de la sandia loca</h3>
+                <h3 id="nombresandia">Colgante de la sandia loca</h3>
                 <p>Enloquecete teniendo este llavero, llevatelo a todos lados y vive cada dia como si fuera el ultimo!</p>
                 <div class="destacados-footer">
-                    <span class="precio">25.40€</span>
-                    <button>Comprar</button>
+                    <span class="precio" id="preciosandia">25.40€</span>
+                    <button (click)="afegirCistella('img/catalogo/LlaveroSandia.avif', 'nombresandia', 'sandia', 'preciosandia')">Comprar</button>
                 </div>
                 <div class="destacados-footer">
                     <button (click)="restar('sandia')">-</button>
@@ -159,11 +165,11 @@
         <article class="producte">
             <img [src]="cgetpath('img/catalogo/Oro.jpg')" alt="Anime">
             <div class="info">
-                <h3>1 kilo de oro a precio del mercado</h3>
+                <h3 id="nombreoro">1 kilo de oro a precio del mercado</h3>
                 <p>La primera tienda de merchandising mundial que permite la compra de oro!</p>
                 <div class="destacados-footer">
-                    <span class="precio">130.000€</span>
-                    <button>Comprar</button>
+                    <span class="precio" id="precio_oro">130 000€</span>
+                    <button (click)="afegirCistella('img/catalogo/Oro.jpg', 'nombreoro', 'oro', 'precio_oro')">Comprar</button>
                 </div>
 
                 <div class="destacados-footer">

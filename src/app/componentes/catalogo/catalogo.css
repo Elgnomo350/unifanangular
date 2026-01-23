@@ -133,3 +133,24 @@ body {
 .popup-alerta.show {
   opacity: 1;
 }
+
+.filtros {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.filtros button {
+    background-color: #EFA9AE;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.filtros button:hover {
+    background-color: #EAFDF8;
+}
