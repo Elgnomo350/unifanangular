@@ -1,24 +1,37 @@
-  <form action="#" method="post">
+<form (ngSubmit)="iniciarSessio()" #loginForm="ngForm">
+  <h1>Iniciar sesion</h1>
+
+  <label for="email">Correo electrónico</label>
+  <input type="email" id="iemail" [(ngModel)]="loginEmail" name="email" required>
+
+  <label for="contrasenya">Contraseña</label>
+  <input type="password" id="icontrasenya" [(ngModel)]="loginPass" name="contrasenya" required>
+
+  <button type="submit" [disabled]="loginForm.invalid">Enviar</button>
+  </form>
+
+  <form (ngSubmit)="registrarse()" #registerForm="ngForm">
     <h1>Formulario de registro</h1>
 
     <label for="nom">Nombre</label>
-    <input type="text" id="nom" name="nom" required>
+    <input type="text" id="nom" name="nom" [(ngModel)]="nom" required>
 
     <label for="cognoms">Apellidos</label>
-    <input type="text" id="cognoms" name="cognoms" required>
+    <input type="text" id="cognoms" name="cognoms" [(ngModel)]="cognom" required>
 
     <label for="email">Correo electrónico</label>
-    <input type="email" id="email" name="email" required>
+    <input type="email" id="email" name="email" [(ngModel)]="email" required>
 
     <label for="contrasenya">Contraseña</label>
-    <input type="password" id="contrasenya" name="contrasenya" required>
+    <input type="password" id="contrasenya" name="contrasenya" [(ngModel)]="passwd" required>
 
     <label for="direccion">Dirección</label>
-    <input type="text" id="direccion" name="direccion">
+    <input type="text" id="direccion" [(ngModel)]="direccio" name="direccion" required="">
 
     <label for="telefon">Teléfono</label>
-    <input type="tel" id="telefon" name="telefon" pattern="[0-9]{9}" placeholder="911112091">
+    <input type="tel" id="telefon" name="telefon" pattern="[0-9]{9}" [(ngModel)]="telefon" placeholder="911112091" required>
 
     <button type="submit">Enviar</button>
     <button type="reset">Limpiar</button>
   </form>
+

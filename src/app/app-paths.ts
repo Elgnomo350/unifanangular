@@ -5,4 +5,5 @@ export const AppPaths: Record<string, string> = {
   registre: 'registre',
   cistella: 'cistella',
   condicions: 'condicions',
+  panel: 'panelusuari'
 } as const;
