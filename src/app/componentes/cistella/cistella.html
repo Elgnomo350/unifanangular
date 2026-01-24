@@ -1,6 +1,35 @@
 <section class="cesta">
 <h1>Cesta</h1>
+@if (getcistella().length == 0) {
 <h2>Tu cesta se siente sola...</h2>
 <h3>Añade algo para acompañarla!</h3>
-<a [routerLink]="cgetroute('catalogo')">Compra ya!</a>
+<a [routerLink]="'../' + cgetroute('catalogo')">Compra ya!</a>
+}
+@else {
+@for (item of getcistella(); track $index) {
+  <div class="item-cesta">
+    
+    <img class="producto-img" [src]="item.gfoto" alt="foto producte"/>
+
+    <div class="info">
+      <p class="titulo">{{ item.gnom }}</p>
+      <p class="cantidad">Cantidad: {{ item.gquantitat }}</p>
+    </div>
+
+    <div class="acciones">
+        <button class="btn-modcesta" (click)="borrarelement($index)">🗑</button>
+        <button class="btn-modcesta" (click)="this.sumarUnaUnitat($index)">+</button>
+        <span class="precio">{{ retornarPreuArrodonit(item.gpreutotal) }}€</span>
+        <button class="btn-modcesta" (click)="restarUnaUnitat($index)">-</button>
+    </div>
+
+  </div>
+}
+
+{{this.sumTotal()}}
+
+<h2 id="total">Total: 0</h2>
+<button (click)="buidarcistella()" class="btn-comprar">Comprar</button>
+}
+
 </section>

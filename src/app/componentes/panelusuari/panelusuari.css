@@ -1,0 +1,66 @@
+.user-panel {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 25px 30px;
+  margin-top: 10em;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+.user-panel h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.user-info p {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.user-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  gap: 10px;
+}
+
+.btn {
+  flex: 1;
+  padding: 10px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn.logout {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn.logout:hover {
+  background-color: #2980b9;
+}
+
+.btn.delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn.delete:hover {
+  background-color: #c0392b;
+}
+
+.btn.delete-all {
+  background-color: #8e44ad;
+  color: white;
+}
+
+.btn.delete-all:hover {
+  background-color: #71368a;
+}
