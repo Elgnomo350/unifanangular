@@ -3,7 +3,7 @@
     display: flex;
     align-content: center;
     justify-content: center;
-    background: url("/public/img/fondo-estrellas.jpg");
+    background: url("/img/fondoestrellas.jpg");
     background-size: cover;
     background-position: center;
     flex-direction: column;
@@ -60,6 +60,10 @@
     margin-bottom: 2em;
 }
 
+.destacados-footer a{
+    text-decoration: none;
+    color: white;
+}
 
 @media (min-width: 768px){
     .banner{
