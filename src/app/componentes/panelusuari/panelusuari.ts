@@ -65,12 +65,4 @@ export class Panelusuari implements OnInit{
     this.tancarSessio();
   }
 
-  eliminarTodasCuentas() {
-    const confirmar = confirm('¿Seguro que quieres eliminar todas las cuentas?');
-    if (!confirmar) return;
-
-    this.registrar.clearAll();
-    this.tancarSessio();
-  }
-
 }
