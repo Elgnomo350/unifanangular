@@ -56,9 +56,10 @@ export class Registre implements OnInit{
       return;
     }
 
-    this.usuariDades.setUsuari(this.nom, this.cognom, this.email, this.passwd, this.direccio, this.telefon);
-    alert('Usuario registrado correctamente');
-    
+    this.usuariDades.setUsuari(this.nom, this.cognom, this.email, this.passwd, this.direccio, this.telefon).subscribe((res) => {
+      alert(res.mensaje)
+    })
+
     this.nom = '';
     this.cognom = '';
     this.email = '';
