@@ -56,5 +56,9 @@ app.post("/registrar", async (req, res) => {
 
 })
 
+app.get('/api/unifan', (req, res) => {
+  res.json({nom, cognom});
+});
+
 
 

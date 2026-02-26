@@ -28,6 +28,14 @@ export class Panelusuari implements OnInit{
     }
   }
 
+/*
+  getDades () {
+  this.http.get('acc/databases/{database}/documents',
+  {nom, cognom}).subscribe(response => { console.log(response);
+   });
+   }
+*/
+
   ponerNombreRojo() {
     this.nombre.nativeElement.style.color = this.canmbiarrojo ? 'red' : 'black'
     this.canmbiarrojo = !this.canmbiarrojo
