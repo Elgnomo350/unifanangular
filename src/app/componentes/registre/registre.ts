@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IniciarSessio, Registrar, Usuaridades } from '../../serveis/usuaridades/usuaridades';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-registre',
@@ -26,39 +26,21 @@ export class Registre implements OnInit{
   passwd = '';
   direccio = '';
   telefon = '';
-
   loginEmail = '';
   loginPass = '';
 
 
   public registrarse(){
-    if (!this.nom || !this.cognom || !this.email || !this.passwd || !this.direccio || !this.telefon) {
-      alert('Rellena los campos obligatorios');
-      return;
+
+    this.usuariDades.setUsuari(this.nom, this.cognom, this.email, this.passwd, this.direccio, this.telefon)
+    .subscribe({
+    next: (res) => {
+      alert(res.mensaje);
+    },
+    error: (err) => {
+      alert(err.error.message);
     }
-
-    if(this.registrarservei.getUsuaris()[this.email]){
-      alert('Ja hi ha aquest correu registrat');
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(this.email)) {
-      alert("Email con formato incorrecto, sigue el formato text@text.text")
-      return;
-    }
-
-    const telefonoRegex = /^[0-9]{9}$/;
-
-    if (!telefonoRegex.test(this.telefon)) {
-      alert("Numero con formato incorrecto, pon 9 digitos juntos");
-      return;
-    }
-
-    this.usuariDades.setUsuari(this.nom, this.cognom, this.email, this.passwd, this.direccio, this.telefon).subscribe((res) => {
-      alert(res.mensaje)
-    })
+  });
 
     this.nom = '';
     this.cognom = '';
