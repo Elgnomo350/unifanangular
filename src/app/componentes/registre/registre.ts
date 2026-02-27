@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { IniciarSessio, Registrar, Usuaridades } from '../../serveis/usuaridades/usuaridades';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-registre',
