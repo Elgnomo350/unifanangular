@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Manejarcistella } from '../manejarcistella/manejarcistella';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +16,8 @@ export class Usuaridades {
   private direccio!: string;
   private Telefon!: string;
 
-  constructor(private registrar: Registrar, private iniciaSessio: IniciarSessio) {}
-
+  constructor(private registrar: Registrar, private iniciaSessio: IniciarSessio, private httpclient: HttpClient) {}
+  
   public setUsuari(
     nom: string,
     cognom: string,
@@ -32,17 +33,9 @@ export class Usuaridades {
     this.direccio = direccio;
     this.Telefon = telefon;
 
+    return this.httpclient.post<{mensaje: string}>("http://localhost:23000/registrar", 
+      {nom, cognom, correu, passwd, direccio, telefon})
 
-    const dades: UsuariData = {
-      Nom: this.Nom,
-      Cognom: this.Cognom,
-      Correu: this.Correu,
-      passwd: this.passwd,
-      direccio: this.direccio,
-      Telefon: this.Telefon
-    };
-
-    this.registrar.afegirUsuari(dades)
 }  
 
 public iniciarSessio(correu: string | null, passwd: string | null){
