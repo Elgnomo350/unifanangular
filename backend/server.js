@@ -15,13 +15,6 @@ app.use(express.json());
 
 app.listen(23000, () => console.log(`listening on http://localhost:${23000}`));
 
-async function test() {
-  const snapshot = await db.collection('test').get();
-  console.log(snapshot.docs.map(doc => doc.data()));
-}
-
-test().catch(console.error);
-
 const usuarioSchema = z.object({
   nom: z.string().refine(campo => campo.trim().length > 0, {
   error: "El nombre no puede estar vacío"
