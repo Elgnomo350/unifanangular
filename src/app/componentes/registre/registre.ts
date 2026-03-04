@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { IniciarSessio, Registrar, Usuaridades } from '../../serveis/usuaridades/usuaridades';
+import { Component } from '@angular/core';
+import { Usuaridades } from '../../serveis/usuaridades/usuaridades';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-registre',
@@ -9,15 +10,8 @@ import { Router } from '@angular/router';
   templateUrl: './registre.html',
   styleUrl: './registre.css',
 })
-export class Registre implements OnInit{
-  constructor(private usuariDades: Usuaridades, private iniciaSessio: IniciarSessio, 
-    private registrarservei: Registrar, private router: Router){}
-
-  ngOnInit(): void {
-    if(this.iniciaSessio.getIniciatSessio()){
-      this.anarAPanell()
-    }
-  }
+export class Registre{
+  constructor(private usuariDades: Usuaridades,private router: Router){}
 
   nom = '';
   cognom = '';
@@ -41,7 +35,7 @@ export class Registre implements OnInit{
     }
   });
 
-    this.nom = '';
+    this.nom = ''
     this.cognom = '';
     this.email = '';
     this.passwd = '';
@@ -50,22 +44,23 @@ export class Registre implements OnInit{
   }
 
   public iniciarSessio(){
-    if (!this.loginEmail || !this.loginPass) {
-      alert('Rellena todos los campos');
-      return;
-    }
+    this.usuariDades.iniciarSessio(this.loginEmail, this.loginPass).subscribe({
+      next: (res) => {
+        alert(res.mensaje)
 
-    this.usuariDades.iniciarSessio(this.loginEmail, this.loginPass);
+        const dades = jwtDecode<Payload>(res.token);
+        this.usuariDades.setDades(dades)
+        this.usuariDades.setIniciatSessio(true);
 
-    if (this.iniciaSessio.getIniciatSessio()) {
-      alert('Sesión iniciada correctamente');
-      this.anarAPanell()
-    } else {
-      alert('Correo o contraseña incorrectos');
-    }
-
-    this.loginEmail = '';
-    this.loginPass = '';
+      },
+      error: (err) => {
+        alert(err.error.message)
+      },
+      complete: () => {
+          this.loginEmail = '';
+          this.loginPass = '';
+      }
+    })
   }
 
 
@@ -74,7 +69,14 @@ export class Registre implements OnInit{
   }
 
   public iniciatSessio(){
-    return this.iniciaSessio.getIniciatSessio()
   }
 
 }
+
+export interface Payload {
+  nom: string;
+  cognom: string;
+  correu: string;
+  direccio: string;
+  telefon: string;
+} 
