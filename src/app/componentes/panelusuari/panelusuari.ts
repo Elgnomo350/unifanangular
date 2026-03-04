@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Registrar, IniciarSessio, UsuariData } from '../../serveis/usuaridades/usuaridades';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,16 +15,10 @@ export class Panelusuari implements OnInit{
   private canmbiarrojo: boolean = true;
 
   constructor(
-    private registrar: Registrar,
-    private iniciaSessio: IniciarSessio,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    if(!this.iniciaSessio.getIniciatSessio()){
-    alert("Inicia sesion per entrar aqui")
-    this.router.navigate(['/registre']);
-    }
   }
 
   ponerNombreRojo() {
@@ -39,30 +32,6 @@ export class Panelusuari implements OnInit{
 
   quitarCognomAzul() {
     this.cognom.nativeElement.style.color = 'black';
-  }
-
-  get usuariIniciat(): UsuariData | null {
-    return this.iniciaSessio.getUsuariIniciat();
-  }
-
-  get iniciat(): boolean {
-    return this.iniciaSessio.getIniciatSessio();
-  }
-
-  tancarSessio() {
-    this.iniciaSessio.tancarSessio();
-    alert('Sesión cerrada');
-    this.router.navigate(['/registre']);
-  }
-
-  eliminarCuenta() {
-    if (!this.usuariIniciat) return;
-
-    const confirmar = confirm('¿Seguro que quieres eliminar tu cuenta?');
-    if (!confirmar) return;
-
-    this.registrar.clearUsuari(this.usuariIniciat.Correu);
-    this.tancarSessio();
   }
 
 }
