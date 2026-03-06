@@ -260,7 +260,7 @@ app.post("/cerrarsesion", async (req, res) => {
           maxAge: 0
     })
 
-    res.status(200).json({mensaje: "Cierre de sesión exitsoso"})
+    res.status(200).json({mensaje: "Cierre de sesión exitoso"})
     return
     } catch (error) {
     const err = error.message
