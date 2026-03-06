@@ -6,7 +6,7 @@ const admin = require('firebase-admin');
 const serviceAccount = require('./clave.json');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const crypto = require("node:crypto")
+const crypto = require("node:crypto");
 require('dotenv').config();
 
 admin.initializeApp({
@@ -63,7 +63,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 
 async function comprovacio(request){
-
+  try {
   const token = request.cookies.token || null;
   if (!token) return {
     message: "El servidor no ha recibido un token valido",
@@ -90,7 +90,12 @@ async function comprovacio(request){
   } 
 
   return {code: 200, token: token, dades: dades, activeSessions: activeSessions, user: user}
-
+  } catch (error) {
+    return {
+      message: "Ha ocurrido un error " + error,
+      code: 500
+    }
+  }
 }
 
 app.post("/registrar", async (req, res) => {
@@ -227,7 +232,7 @@ app.get('/loggedin', async (req, res) => {
           maxAge: 1000 * 60 * 60 * 24 * 7
     })
 
-    res.status(200).json({ usuario: dades });
+    res.status(200).json({ token: token });
     return 
 
   } catch (error) {
@@ -282,6 +287,101 @@ app.delete("/borrarmicuenta", async (req, res) => {
 
     db.collection("unifan").doc(dades.correu).delete().then(() => {
     return res.status(200).json({mensaje: "Cuenta " + dades.correu + " eliminada correctamente"})
+  })
+
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+})
+
+app.patch("/modificarcampo", async (req, res) => {
+
+  try {
+    const comprovar = await comprovacio(req)
+
+  if(comprovar.code !== 200){
+      return res.status(comprovar.code).json({message: comprovar.message})
+    }
+
+  const { code, token, dades, activeSessions, user } = comprovar
+
+  if(!(req.body.campo in dades)) return res.status(400).send({message: "Campo no encontrado"})
+  
+  if(req.body.campo === "passwd") return res.status(400).send({message: "No puedes modificar la contraseña desde aqui"})
+  if(req.body.campo === "correu") return res.status(400).send({message: "No puedes modificar el correo desde aqui"})
+
+  await user.update({[req.body.campo]: req.body.contenido})
+
+  const novesdades = (await user.get()).data()
+
+  const { nom, cognom, correu, passwd, direccio, telefon } = novesdades;
+
+  const payload = {
+    nom: nom,
+    cognom: cognom,
+    correu: correu,
+    direccio: direccio,
+    telefon: telefon,
+    sessionID: dades.sessionID
+  }
+
+  const newtoken = jwt.sign(payload, SECRET_KEY);
+
+    res.cookie('token', newtoken, {
+          httpOnly: true,
+          secure: false,
+          sameSite: 'lax',
+          maxAge: 1000 * 60 * 60 * 24 * 7
+    })
+
+  res.status(200).send({
+    mensaje: "El campo " + req.body.campo + " ha sido actualizado",
+    token: newtoken
+  })
+ 
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+
+})
+
+app.patch("/modificarcorreu", async (req, res) => {
+  try {
+
+    const emailformat = z.email({ error: "Email con formato incorrecto, sigue el formato text@text.text" });
+    const resultado = emailformat.safeParse(req.body.noucorreu);
+
+    if (!resultado.success) {
+      res.status(400).json({
+        message: resultado.error.issues[0].message
+      })
+      return;
+    }
+
+    const comprovar = await comprovacio(req)
+    if(comprovar.code !== 200){
+      return res.status(comprovar.code).json({message: comprovar.message})
+    }
+
+    const { code, token, dades, activeSessions, user } = comprovar
+    
+    const nouUser = db.collection("unifan").doc(req.body.noucorreu);
+
+    if((await nouUser.get()).exists){
+      res.status(409).json({ message: "El usuario " + req.body.noucorreu + " ya está registrado, use otro correo." });
+      return;
+    }    
+    
+    await nouUser.set((await user.get()).data());
+    await nouUser.set({correu: req.body.noucorreu}, {merge: true})
+    await nouUser.set({sessionID: []}, {merge: true})
+
+    db.collection("unifan").doc(dades.correu).delete().then(() => {
+    return res.status(200).json({mensaje: "Correo cambiado correctamente"})
   })
 
   } catch (error) {

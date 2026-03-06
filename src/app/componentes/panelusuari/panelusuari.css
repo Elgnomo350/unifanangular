@@ -68,3 +68,52 @@
 p{
   color: black;
 }
+
+.user-row{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sensitive-actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.sensitive-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sensitive-row .btn {
+  background-color: #f39c12;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.sensitive-row .btn:hover {
+  background-color: #e67e22;
+}
+
+.sensitive-row input {
+  margin-top: 5px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 180px;
+}
+
+.sensitive-row button + button {
+  margin-top: 5px;
+}

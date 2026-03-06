@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
 import { Getasset } from '../../serveis/getasset/getasset';
 import { Getroute } from '../../serveis/getroute/getroute';
@@ -14,10 +14,12 @@ import { Usuaridades } from '../../serveis/usuaridades/usuaridades';
 export class Header{
 
   constructor(private getasset: Getasset, private getroute: Getroute, 
-    private manejarCistella: Manejarcistella, private router: Router, private usuaridades: Usuaridades){
+    private manejarCistella: Manejarcistella, private router: Router, private usuaridades: Usuaridades,
+    private cgr: ChangeDetectorRef){
 
     this.usuaridades.getIniciatSessio().subscribe(iniciat => {
       this.iniciatSessio = iniciat
+      this.cgr.detectChanges()
     })
     
   }  

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -41,9 +42,10 @@ public cerrarSesion(){
 }
 
 public checkSessio() {
-  this.httpclient.get('http://localhost:23000/loggedin', { withCredentials: true }).subscribe({
-    next: (res: any) => {
-      this.setDades(res.usuario);
+  this.httpclient.get<{token: string}>('http://localhost:23000/loggedin', { withCredentials: true }).subscribe({
+    next: (res) => {
+      const dades = jwtDecode<UsuariData>(res.token);
+      this.setDades(dades)
       this.setIniciatSessio(true);
     },
     error: () => {
@@ -54,6 +56,14 @@ public checkSessio() {
 
 public borrarMiCuenta(){
     return this.httpclient.delete<{mensaje: string, token: string}>("http://localhost:23000/borrarmicuenta", {withCredentials: true})
+}
+
+public modificarDatos(campo: string, contenido: string){
+    return this.httpclient.patch<{mensaje: string, token: string}>("http://localhost:23000/modificarcampo", {campo: campo, contenido: contenido},{withCredentials: true})
+}
+
+public modificarCorreo(correo: string){
+    return this.httpclient.patch<{mensaje: string}>("http://localhost:23000/modificarcorreu", {noucorreu: correo},{withCredentials: true})
 }
 
 public getDades(){

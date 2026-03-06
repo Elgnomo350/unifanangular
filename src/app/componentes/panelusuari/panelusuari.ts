@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { Usuaridades } from '../../serveis/usuaridades/usuaridades';
+import { Usuaridades, UsuariData } from '../../serveis/usuaridades/usuaridades';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-panelusuari',
@@ -15,7 +16,7 @@ export class Panelusuari implements OnInit{
   @ViewChild('cognom') cognom!: ElementRef<HTMLParagraphElement>;
   private canmbiarrojo: boolean = true;
 
-  constructor(private router: Router, private usuariDades: Usuaridades,  ) {}
+  constructor(private router: Router, private usuariDades: Usuaridades) {}
 
   ngOnInit(): void {
     this.usuariDades.getIniciatSessio().subscribe(iniciat => {
@@ -61,6 +62,59 @@ export class Panelusuari implements OnInit{
       next: (res) => {
         alert(res.mensaje)
         this.usuariDades.setIniciatSessio(false)
+        this.router.navigate(["/registre"])
+      },
+      error: (err) => {
+        alert("Error: " + err.error.message)
+      }
+    })
+  }
+
+  private editando: Record<string, boolean> = {
+  nom: false,
+  cognom: false,
+  correu: false,
+  direccio: false,
+  telefon: false,
+  infoSensibles: false,
+  correo: false
+  };
+
+  public getPropietats(){
+    return this.editando
+  }
+
+  public toggleEditar(campo: string){
+    this.editando[campo] = !this.editando[campo];
+  }
+
+  public modificarCampo(campo: string, contenido: string){
+    this.usuariDades.modificarDatos(campo, contenido).subscribe({
+      next: (res) => {
+        const dades = jwtDecode<UsuariData>(res.token);
+        this.usuariDades.setDades(dades)
+        alert(res.mensaje)
+        window.location.reload();
+      },
+      error: (err) => {
+        alert("Error: " + err.error.message)
+      }
+    })
+  }
+
+  public modificarCorreo(correu: string){
+    this.usuariDades.modificarCorreo(correu).subscribe({
+      next: (res) => {
+        alert(res.mensaje)
+        this.usuariDades.setDades({  
+          nom: "",
+          cognom: "",
+          correu: "",
+          direccio: "",
+          telefon: "",
+          sessionID: ""        
+        })
+        this.usuariDades.setIniciatSessio(false);
         this.router.navigate(["/registre"])
       },
       error: (err) => {
