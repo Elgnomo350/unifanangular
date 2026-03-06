@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
 import { Getasset } from '../../serveis/getasset/getasset';
 import { Getroute } from '../../serveis/getroute/getroute';
 import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
+import { Usuaridades } from '../../serveis/usuaridades/usuaridades';
 
 @Component({
   selector: 'app-header',
@@ -13,8 +14,15 @@ import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
 export class Header{
 
   constructor(private getasset: Getasset, private getroute: Getroute, 
-    private manejarCistella: Manejarcistella, private router: Router){
+    private manejarCistella: Manejarcistella, private router: Router, private usuaridades: Usuaridades){
+
+    this.usuaridades.getIniciatSessio().subscribe(iniciat => {
+      this.iniciatSessio = iniciat
+    })
+    
   }  
+
+  private iniciatSessio: boolean = false; 
 
   public getNumProductes(){
     let num = 0
@@ -23,9 +31,18 @@ export class Header{
     }
     return 0
   }
+  
   public tancarSessio() {
-    alert('Sesión cerrada');
-    this.router.navigate(['/registre']);
+    this.usuaridades.cerrarSesion().subscribe({
+      next: (res) => {
+        alert(res.mensaje)
+        this.usuaridades.setIniciatSessio(false)
+        this.router.navigate(["/registre"])
+      },
+      error: (err) => {
+        alert("Error: " + err.error.message)
+      }
+    })
   }
 
   public cgetpath(path: string){
@@ -36,4 +53,15 @@ export class Header{
     return this.getroute.getroute(path);
   }
 
+  public registreOpanell(){
+    return this.iniciatSessio ? "panel" : "registre"
+  }
+
+  public hainiciatSessio(){
+    return this.iniciatSessio
+  }
+
+  public getNom(){
+    return this.usuaridades.getDades()?.nom;
+  }
 }
