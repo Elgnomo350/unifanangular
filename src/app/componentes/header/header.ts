@@ -28,12 +28,6 @@ export class Header{
     this.router.navigate(['/registre']);
   }
 
-  public iniciatSessio(){
-  }
-
-  public getNom(){
-  }
-
   public cgetpath(path: string){
     return this.getasset.getpath(path);
   }

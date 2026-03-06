@@ -6,7 +6,7 @@ const admin = require('firebase-admin');
 const serviceAccount = require('./clave.json');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const { tr } = require('zod/v4/locales');
+const crypto = require("node:crypto")
 require('dotenv').config();
 
 admin.initializeApp({
@@ -59,6 +59,39 @@ const usuarioSchema = z.object({
   passwd: z.string({error: "Has puesto algo invalido como contraseña."})
 });
 
+const SECRET_KEY = process.env.SECRET_KEY; 
+
+
+async function comprovacio(request){
+
+  const token = request.cookies.token || null;
+  if (!token) return {
+    message: "El servidor no ha recibido un token valido",
+    code: 401
+  }
+
+  const dades = jwt.verify(token, SECRET_KEY); 
+
+  const user = db.collection('unifan').doc(dades.correu);
+  const userSnap = await user.get();
+
+  if (!userSnap.exists) return {
+    message: "Usuario no encontrado",
+    code: 401
+  }
+
+  const activeSessions = userSnap.data().activeSessions || [];
+
+  if (!activeSessions.includes(dades.sessionID)) {
+      return { 
+        message: "SessionID inválida",
+        code: 401
+      }
+  } 
+
+  return {code: 200, token: token, dades: dades, activeSessions: activeSessions, user: user}
+
+}
 
 app.post("/registrar", async (req, res) => {
     const result = usuarioSchema.safeParse(req.body);
@@ -100,7 +133,6 @@ app.post("/registrar", async (req, res) => {
 
 })
 
-const SECRET_KEY = process.env.SECRET_KEY; 
 
 app.post("/iniciarsessio", async (req, res) => {
     const result = usuarioIniciarSesion.safeParse(req.body);
@@ -130,12 +162,20 @@ app.post("/iniciarsessio", async (req, res) => {
 
     const { nom, cognom, correu, passwd, direccio, telefon } = userData;
     
+    
+    const sessionID = crypto.randomBytes(4).readUInt32BE(0).toString()
+
+    user.set({
+      activeSessions: admin.firestore.FieldValue.arrayUnion(sessionID),
+    }, {merge: true})
+
     const payload = {
       nom: nom,
       cognom: cognom,
       correu: correu,
       direccio: direccio,
-      telefon: telefon
+      telefon: telefon,
+      sessionID: sessionID
     }
     
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "7d" });
@@ -163,31 +203,94 @@ app.post("/iniciarsessio", async (req, res) => {
 
     } catch (error) {
     const err = error.message
-    res.status(500).json({ message: "Hi ha hagut un error: " + err });
+    res.status(500).json({ message: "Ha habido un error: " + err });
     return;
     }
 
 })
 
-app.get('/loggedin', (req, res) => {
-  const token = req.cookies.token;
-  if (!token) return res.status(401).json({message: "mi bombo"})
-   
+app.get('/loggedin', async (req, res) => {  
+  
   try {
-    const dades = jwt.verify(token, SECRET_KEY);
+    const comprovar = await comprovacio(req)
+
+    if(comprovar.code !== 200){
+      return res.status(comprovar.code).json({message: comprovar.message})
+    }
+    
+    const { code, token, dades, activeSessions, user } = comprovar
+
     res.cookie('token', token, {
           httpOnly: true,
           secure: false,
           sameSite: 'lax',
           maxAge: 1000 * 60 * 60 * 24 * 7
     })
-    res.json({ usuario: dades });
-    return
-  } catch (err) {
-    res.status(401).json({ mensaje: 'Token inválido' });
-    return
+
+    res.status(200).json({ usuario: dades });
+    return 
+
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
   } 
 });
+
+
+app.post("/cerrarsesion", async (req, res) => {
+    
+  try {
+
+    const comprovar = await comprovacio(req)
+
+    if(comprovar.code !== 200){
+      return res.status(comprovar.code).json({message: comprovar.message})
+    }
+    
+    const { code, token, dades, activeSessions, user } = comprovar
+
+    const updatedSessions = activeSessions.filter(s => s !== dades.sessionID);
+    await user.update({ activeSessions: updatedSessions });
+
+    res.cookie('token', token, {
+          httpOnly: true,
+          secure: false,
+          sameSite: 'lax',
+          maxAge: 0
+    })
+
+    res.status(200).json({mensaje: "Cierre de sesión exitsoso"})
+    return
+    } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+    }
+})
+
+app.delete("/borrarmicuenta", async (req, res) => {
+  try {
+    
+    const comprovar = await comprovacio(req)
+
+    if(comprovar.code !== 200){
+      return res.status(comprovar.code).json({message: comprovar.message})
+    }
+
+    const { code, token, dades, activeSessions, user } = comprovar
+
+    db.collection("unifan").doc(dades.correu).delete().then(() => {
+    return res.status(200).json({mensaje: "Cuenta " + dades.correu + " eliminada correctamente"})
+  })
+
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+})
+
 
 
 

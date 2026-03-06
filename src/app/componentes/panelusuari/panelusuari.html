@@ -2,16 +2,21 @@
   <h1>Panel de Usuario</h1>
   
   <div class="user-info">
-  <p #nombre (click)="ponerNombreRojo()">
-  </p>
+  <p #nombre (click)="ponerNombreRojo()">Nom: {{getUserDades()?.nom}}</p>
 
-  <p #cognom (mouseenter)="ponerCognomAzul()"(mouseleave)="quitarCognomAzul()">
-  </p>    
+  <p #cognom (mouseenter)="ponerCognomAzul()" (mouseleave)="quitarCognomAzul()">Cognom: {{getUserDades()?.cognom}}</p>
+
+  <p>Correo: {{getUserDades()?.correu}}</p>
+
+  <p>Direccion: {{getUserDades()?.direccio}}</p>
+
+  <p>Telefono: {{getUserDades()?.telefon}}</p>
+
     <p>Clica en el nombre o pasa el mouse sobre el apellido para que cambien de color! (Se ha usado @ViewChild para estos eventos)</p>
   </div>
 
   <div class="user-actions">
-    <button class="btn logout">Cerrar sesión</button>
-    <button class="btn delete">Eliminar mi cuenta</button>
+    <button class="btn logout" (click)="cerrarSesion()">Cerrar sesión</button>
+    <button class="btn delete" (click)="eliminarMiCuenta()">Eliminar mi cuenta</button>
   </div>
 </div>

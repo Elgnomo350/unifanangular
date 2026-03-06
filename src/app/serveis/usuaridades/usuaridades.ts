@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,9 @@ import { HttpClient } from '@angular/common/http';
 export class Usuaridades {
 
   private dades: UsuariData | null = null
-  private iniciatSessio: boolean = false
+  private iniciatSessioBhvior = new BehaviorSubject<boolean>(false);
+  private iniciatSessio = this.iniciatSessioBhvior.asObservable();
+
 
   constructor(private httpclient: HttpClient) {
     this.checkSessio()
@@ -32,6 +35,10 @@ public iniciarSessio(correu: string, passwd: string){
       {correu, passwd}, {withCredentials: true})
 } 
 
+public cerrarSesion(){
+    return this.httpclient.post<{mensaje: string, token: string}>("http://localhost:23000/cerrarsesion", 
+      {}, {withCredentials: true})
+}
 
 public checkSessio() {
   this.httpclient.get('http://localhost:23000/loggedin', { withCredentials: true }).subscribe({
@@ -43,6 +50,10 @@ public checkSessio() {
       this.setIniciatSessio(false);
     }
   });
+}
+
+public borrarMiCuenta(){
+    return this.httpclient.delete<{mensaje: string, token: string}>("http://localhost:23000/borrarmicuenta", {withCredentials: true})
 }
 
 public getDades(){
@@ -57,8 +68,12 @@ public getIniciatSessio(){
   return this.iniciatSessio
 }
 
+public getIniciatSessioValue(): boolean{
+  return this.iniciatSessioBhvior.getValue()
+}
+
 public setIniciatSessio(bool: boolean){
-  this.iniciatSessio = bool
+  this.iniciatSessioBhvior.next(bool)
 }
 
 }
@@ -69,6 +84,7 @@ export interface UsuariData {
   correu: string;
   direccio: string;
   telefon: string;
+  sessionID: string;
 }
 
 

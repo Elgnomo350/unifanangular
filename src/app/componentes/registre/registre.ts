@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Usuaridades } from '../../serveis/usuaridades/usuaridades';
+import { Component, OnInit } from '@angular/core';
+import { Usuaridades, UsuariData } from '../../serveis/usuaridades/usuaridades';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
@@ -10,7 +10,7 @@ import { jwtDecode } from 'jwt-decode';
   templateUrl: './registre.html',
   styleUrl: './registre.css',
 })
-export class Registre{
+export class Registre implements OnInit{
   constructor(private usuariDades: Usuaridades,private router: Router){}
 
   nom = '';
@@ -22,6 +22,13 @@ export class Registre{
   loginEmail = '';
   loginPass = '';
 
+  ngOnInit(): void {
+    this.usuariDades.getIniciatSessio().subscribe(iniciat => {
+      if(iniciat){
+        this.anarAPanell()
+      }
+    })
+  }
 
   public registrarse(){
 
@@ -29,18 +36,19 @@ export class Registre{
     .subscribe({
     next: (res) => {
       alert(res.mensaje);
+
+      this.nom = ''
+      this.cognom = '';
+      this.email = '';
+      this.passwd = '';
+      this.direccio = '';
+      this.telefon = '';
+
     },
     error: (err) => {
       alert(err.error.message);
     }
   });
-
-    this.nom = ''
-    this.cognom = '';
-    this.email = '';
-    this.passwd = '';
-    this.direccio = '';
-    this.telefon = '';
   }
 
   public iniciarSessio(){
@@ -48,35 +56,23 @@ export class Registre{
       next: (res) => {
         alert(res.mensaje)
 
-        const dades = jwtDecode<Payload>(res.token);
+        const dades = jwtDecode<UsuariData>(res.token);
         this.usuariDades.setDades(dades)
         this.usuariDades.setIniciatSessio(true);
 
+        this.loginEmail = '';
+        this.loginPass = '';
+
+        this.anarAPanell()
       },
       error: (err) => {
         alert(err.error.message)
-      },
-      complete: () => {
-          this.loginEmail = '';
-          this.loginPass = '';
       }
     })
   }
-
 
   public anarAPanell(){
     this.router.navigate(['/panelusuari']);
   }
 
-  public iniciatSessio(){
-  }
-
 }
-
-export interface Payload {
-  nom: string;
-  cognom: string;
-  correu: string;
-  direccio: string;
-  telefon: string;
-} 

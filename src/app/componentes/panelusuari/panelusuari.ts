@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { Usuaridades } from '../../serveis/usuaridades/usuaridades';
 
 @Component({
   selector: 'app-panelusuari',
@@ -14,11 +15,19 @@ export class Panelusuari implements OnInit{
   @ViewChild('cognom') cognom!: ElementRef<HTMLParagraphElement>;
   private canmbiarrojo: boolean = true;
 
-  constructor(
-    private router: Router
-  ) {}
+  constructor(private router: Router, private usuariDades: Usuaridades,  ) {}
 
   ngOnInit(): void {
+    this.usuariDades.getIniciatSessio().subscribe(iniciat => {
+      if(!iniciat){
+        this.router.navigate(["/registre"])
+      }
+    }
+    )
+  }
+
+  public getUserDades(){
+    return this.usuariDades.getDades()
   }
 
   ponerNombreRojo() {
@@ -32,6 +41,32 @@ export class Panelusuari implements OnInit{
 
   quitarCognomAzul() {
     this.cognom.nativeElement.style.color = 'black';
+  }
+  
+  public cerrarSesion(){
+    this.usuariDades.cerrarSesion().subscribe({
+      next: (res) => {
+        alert(res.mensaje)
+        this.usuariDades.setIniciatSessio(false)
+        this.router.navigate(["/registre"])
+      },
+      error: (err) => {
+        alert("Error: " + err.error.message)
+      }
+    })
+  }
+
+  public eliminarMiCuenta(){
+    this.usuariDades.borrarMiCuenta().subscribe({
+      next: (res) => {
+        alert(res.mensaje)
+        this.usuariDades.setIniciatSessio(false)
+        this.router.navigate(["/registre"])
+      },
+      error: (err) => {
+        alert("Error: " + err.error.message)
+      }
+    })
   }
 
 }
