@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Getasset } from '../../serveis/getasset/getasset';
 import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
-import { IniciarSessio } from '../../serveis/usuaridades/usuaridades';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,10 +10,8 @@ import { Router } from '@angular/router';
   styleUrl: './catalogo.css',
 })
 export class Catalogo {
-    constructor(private getasset: Getasset, private manejarcistella: Manejarcistella,
-      private iniciaSessio: IniciarSessio, private router: Router
-    ){
-    }
+    constructor(private getasset: Getasset, private manejarcistella: Manejarcistella, private router: Router, 
+    ){}
   
     public cgetpath(path: string){
       return this.getasset.getpath(path);
@@ -33,12 +30,6 @@ export class Catalogo {
     }
 
     public afegirCistella(foto: string, nom: string, idquantitatcomprada: string, preu: string){
-
-    if(!this.iniciaSessio.getIniciatSessio()){
-      alert("Inicia sesion per añadir a la cesta")
-      this.router.navigate(['/registre']);
-      }
-
       idquantitatcomprada = document.getElementById(idquantitatcomprada)!.textContent
 
       if ((idquantitatcomprada) == "0"){

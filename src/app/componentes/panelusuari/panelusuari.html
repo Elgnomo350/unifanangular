@@ -1,22 +1,91 @@
 <div class="user-panel">
   <h1>Panel de Usuario</h1>
   
-  <div class="user-info">
-  <p #nombre (click)="ponerNombreRojo()">
-    <strong>Nombre:</strong> {{ usuariIniciat?.Nom || 'No disponible' }}
-  </p>
+<div class="user-info">
 
-  <p #cognom (mouseenter)="ponerCognomAzul()"(mouseleave)="quitarCognomAzul()">
-    <strong>Apellidos:</strong> {{ usuariIniciat?.Cognom || 'No disponible' }}
-  </p>    
-  <p><strong>Correo:</strong> {{ usuariIniciat?.Correu || 'No disponible' }}</p>
-    <p><strong>Dirección:</strong> {{ usuariIniciat?.direccio || 'No disponible' }}</p>
-    <p><strong>Teléfono:</strong> {{ usuariIniciat?.Telefon || 'No disponible' }}</p>
-    <p>Clica en el nombre o pasa el mouse sobre el apellido para que cambien de color! (Se ha usado @ViewChild para estos eventos)</p>
+  <div class="user-row">
+    <p #nombre (click)="ponerNombreRojo()">Nom: {{getUserDades()?.nom}}</p>
+    <button (click)="toggleEditar('nom')">Modificar</button>
+
+    @if(getPropietats()['nom']){
+      <div>
+        <input #inputNom type="text">
+        <button (click)="modificarCampo('nom', inputNom.value)">Enviar</button>
+      </div>
+    }
   </div>
+
+  <div class="user-row">
+    <p #cognom (mouseenter)="ponerCognomAzul()" (mouseleave)="quitarCognomAzul()">
+      Cognom: {{getUserDades()?.cognom}}
+    </p>
+    <button (click)="toggleEditar('cognom')">Modificar</button>
+
+    @if(getPropietats()['cognom']){
+      <div>
+        <input #inputCognom type="text">
+        <button (click)="modificarCampo('cognom', inputCognom.value)">Enviar</button>
+      </div>
+    }
+  </div>
+
+  <div class="user-row">
+    <p>Correo: {{getUserDades()?.correu}}</p>
+  </div>
+
+  <div class="user-row">
+    <p>Direccion: {{getUserDades()?.direccio}}</p>
+    <button (click)="toggleEditar('direccio')">Modificar</button>
+
+    @if(getPropietats()['direccio']){
+      <div>
+        <input #inputDireccio type="text">
+        <button (click)="modificarCampo('direccio', inputDireccio.value)">Enviar</button>
+      </div>
+    }
+  </div>
+
+  <div class="user-row">
+    <p>Telefono: {{getUserDades()?.telefon}}</p>
+    <button (click)="toggleEditar('telefon')">Modificar</button>
+
+    @if(getPropietats()['telefon']){
+      <div>
+        <input #inputTelefon type="text">
+        <button (click)="modificarCampo('telefon', inputTelefon.value)">Enviar</button>
+      </div>
+    }
+  </div>
+
+</div>
 
   <div class="user-actions">
-    <button class="btn logout" (click)="tancarSessio()">Cerrar sesión</button>
-    <button class="btn delete" (click)="eliminarCuenta()">Eliminar mi cuenta</button>
+    <button class="btn logout" (click)="cerrarSesion()">Cerrar sesión</button>
+    <button class="btn delete" (click)="eliminarMiCuenta()">Eliminar mi cuenta</button>
   </div>
+
+<button class="btn" (click)="toggleEditar('infoSensibles')">
+    Modificar información sensible
+</button>
+
+  @if(getPropietats()['infoSensibles']){
+    <div class="sensitive-actions" style="margin-top: 10px;">
+      
+      <div class="sensitive-row" style="display: inline-block; margin-right: 20px;">
+        <button class="btn" (click)="toggleEditar('correo')">Cambiar correo</button>
+
+        @if(getPropietats()['correo']){
+          <div style="margin-top: 5px;">
+            <input #inputCorreo type="email" placeholder="Nuevo correo">
+            <button (click)="modificarCorreo(inputCorreo.value)">Enviar</button>
+          </div>
+        }
+      </div>
+
+      <div class="sensitive-row" style="display: inline-block;">
+        <button class="btn">Cambiar contraseña</button>
+      </div>
+
+    </div>
+  }
 </div>

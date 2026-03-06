@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Getroute } from '../../serveis/getroute/getroute';
 import { Router, RouterLink } from "@angular/router";
 import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
-import { IniciarSessio } from '../../serveis/usuaridades/usuaridades';
 
 
 @Component({
@@ -15,16 +14,12 @@ export class Cistella implements OnInit{
 
   private total: number = 0
  
-    constructor(private getroute: Getroute, private manejarcistella: Manejarcistella, private iniciaSessio: IniciarSessio,
+    constructor(private getroute: Getroute, private manejarcistella: Manejarcistella,
       private router: Router
     ){
     }
 
   ngOnInit(): void {
-    if(!this.iniciaSessio.getIniciatSessio()){
-    alert("Inicia sesion para tener una cesta")
-    this.router.navigate(['/registre']);
-    }
   }
   
     public cgetroute(path: string){

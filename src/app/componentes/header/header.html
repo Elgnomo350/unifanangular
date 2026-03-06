@@ -11,13 +11,11 @@
   </div>
 
   <div class="icon">
-
-    @if (this.iniciatSessio()) {
+    @if (this.hainiciatSessio()) {
     <b id="nomuser">{{getNom()}}</b>
     <button class="btn logout" (click)="tancarSessio()">Cerrar sesión</button>
     }
-
-    <a [routerLink]="cgetroute('registre')"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" alt="Perfil"></a>
+    <a [routerLink]="cgetroute(registreOpanell())"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" alt="Perfil"></a>
     <div class="cart">
       <a [routerLink]="cgetroute('cistella')"><img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Carrito"></a>
       <span class="count">{{getNumProductes()}}</span>

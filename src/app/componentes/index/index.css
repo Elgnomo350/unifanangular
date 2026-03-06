@@ -65,6 +65,59 @@
     color: white;
 }
 
+.reddit-post {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.reddit-title {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+.post-title {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+.post-meta {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.post-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.post-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.post-images img {
+  max-width: 100%;
+  border-radius: 8px;
+  flex: 1 1 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.post-images img:hover {
+  transform: scale(1.05);
+}
+
 @media (min-width: 768px){
     .banner{
         width: 90%;
