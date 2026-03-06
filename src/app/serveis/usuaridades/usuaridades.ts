@@ -1,145 +1,90 @@
 import { Injectable } from '@angular/core';
-import { Manejarcistella } from '../manejarcistella/manejarcistella';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-
 
 export class Usuaridades {
 
-  private Nom!: string;
-  private Cognom!: string;
-  private Correu!: string;
-  private passwd!: string;
-  private direccio!: string;
-  private Telefon!: string;
+  private dades: UsuariData | null = null
+  private iniciatSessioBhvior = new BehaviorSubject<boolean>(false);
+  private iniciatSessio = this.iniciatSessioBhvior.asObservable();
 
-  constructor(private registrar: Registrar, private iniciaSessio: IniciarSessio, private httpclient: HttpClient) {}
+
+  constructor(private httpclient: HttpClient) {
+    this.checkSessio()
+  }
   
   public setUsuari(
-    nom: string,
-    cognom: string,
-    correu: string,
-    passwd: string,
-    direccio: string,
-    telefon: string
-  ) {
-    this.Nom = nom;
-    this.Cognom = cognom;
-    this.Correu = correu;
-    this.passwd = passwd;
-    this.direccio = direccio;
-    this.Telefon = telefon;
+      nom: string,
+      cognom: string,
+      correu: string,
+      passwd: string,
+      direccio: string,
+      telefon: string
+    ) {
 
     return this.httpclient.post<{mensaje: string}>("http://localhost:23000/registrar", 
       {nom, cognom, correu, passwd, direccio, telefon})
-
 }  
 
-public iniciarSessio(correu: string | null, passwd: string | null){
-  if (!correu || !passwd) return;
+public iniciarSessio(correu: string, passwd: string){
+    return this.httpclient.post<{mensaje: string, token: string}>("http://localhost:23000/iniciarsessio", 
+      {correu, passwd}, {withCredentials: true})
+} 
 
-  const usuari = this.registrar.getUsuaris()[correu] || null;
-  if (!usuari) return;
-
-  if (usuari.passwd === passwd) {
-    this.iniciaSessio.iniciarSessio(usuari);
-  }
-}
+public cerrarSesion(){
+    return this.httpclient.post<{mensaje: string, token: string}>("http://localhost:23000/cerrarsesion", 
+      {}, {withCredentials: true})
 }
 
-@Injectable({
-  providedIn: 'root',
-})
-
-
-//Parte donde se ve el 4.2 de la investigacion, sessionstorage
-export class Registrar {
-
-  private usuarisExistents: Record<string, UsuariData> = {};
-
-  constructor(private manejarCistella: Manejarcistella) {
-    const guardats = localStorage.getItem('Usuarios');
-    this.usuarisExistents = guardats ? JSON.parse(guardats) : {};
-  }
-
-  afegirUsuari(usuari: UsuariData) {
-    this.usuarisExistents[usuari.Correu] = usuari;
-    localStorage.setItem('Usuarios', JSON.stringify(this.usuarisExistents));
-  }
-
-  getUsuaris() {
-    return this.usuarisExistents;
-  }
-
-  getCorreu(correu: string): UsuariData | null {
-    return this.usuarisExistents[correu] || null;
-  }
-
-  getPassword(correu: string): string | null {
-    return this.usuarisExistents[correu]?.passwd || null;
-  }
-
-  clearUsuari(correu: string) {
-    if (this.usuarisExistents[correu]) {
-      this.manejarCistella.borrarCuentacistella(correu)
-      delete this.usuarisExistents[correu];
-      localStorage.setItem('Usuarios', JSON.stringify(this.usuarisExistents));
+public checkSessio() {
+  this.httpclient.get('http://localhost:23000/loggedin', { withCredentials: true }).subscribe({
+    next: (res: any) => {
+      this.setDades(res.usuario);
+      this.setIniciatSessio(true);
+    },
+    error: () => {
+      this.setIniciatSessio(false);
     }
-  }
-
-  clearAll() {
-    this.usuarisExistents = {};
-    this.manejarCistella.borrarTotesCistelles()
-    localStorage.removeItem('Usuarios');
-  }
+  });
 }
 
-
-@Injectable({
-  providedIn: 'root',
-})
-
-export class IniciarSessio{
-  private iniciatSessio = false;
-  private usuariIniciat: UsuariData | null = null;
-
-  constructor(private registrar: Registrar, private manejarcistella: Manejarcistella) {}
-
-  public getIniciatSessio() {
-      return this.iniciatSessio;
-    }
-
-  public getUsuariIniciat() {
-      return this.usuariIniciat;
-    }
-
-
-  public iniciarSessio(usuari: UsuariData) {
-    if (!this.iniciatSessio) {
-      this.usuariIniciat = usuari;
-      this.iniciatSessio = true;
-      this.manejarcistella.setCistella(usuari.Correu);
-    }
-  }
-
-  public tancarSessio() {
-      this.manejarcistella.guardarCistella(this.usuariIniciat!.Correu);
-      this.usuariIniciat = null;
-      this.iniciatSessio = false;
-    }
+public borrarMiCuenta(){
+    return this.httpclient.delete<{mensaje: string, token: string}>("http://localhost:23000/borrarmicuenta", {withCredentials: true})
 }
 
+public getDades(){
+  return this.dades;
+}
+
+public setDades(dades: UsuariData){
+  this.dades = dades
+}
+
+public getIniciatSessio(){
+  return this.iniciatSessio
+}
+
+public getIniciatSessioValue(): boolean{
+  return this.iniciatSessioBhvior.getValue()
+}
+
+public setIniciatSessio(bool: boolean){
+  this.iniciatSessioBhvior.next(bool)
+}
+
+}
 
 export interface UsuariData {
-  Nom: string;
-  Cognom: string;
-  Correu: string;
-  passwd: string;
+  nom: string;
+  cognom: string;
+  correu: string;
   direccio: string;
-  Telefon: string;
+  telefon: string;
+  sessionID: string;
 }
 
 

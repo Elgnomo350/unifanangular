@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Registrar, IniciarSessio, UsuariData } from '../../serveis/usuaridades/usuaridades';
 import { Router } from '@angular/router';
+import { Usuaridades } from '../../serveis/usuaridades/usuaridades';
 
 @Component({
   selector: 'app-panelusuari',
@@ -15,26 +15,20 @@ export class Panelusuari implements OnInit{
   @ViewChild('cognom') cognom!: ElementRef<HTMLParagraphElement>;
   private canmbiarrojo: boolean = true;
 
-  constructor(
-    private registrar: Registrar,
-    private iniciaSessio: IniciarSessio,
-    private router: Router
-  ) {}
+  constructor(private router: Router, private usuariDades: Usuaridades,  ) {}
 
   ngOnInit(): void {
-    if(!this.iniciaSessio.getIniciatSessio()){
-    alert("Inicia sesion per entrar aqui")
-    this.router.navigate(['/registre']);
+    this.usuariDades.getIniciatSessio().subscribe(iniciat => {
+      if(!iniciat){
+        this.router.navigate(["/registre"])
+      }
     }
+    )
   }
 
-/*
-  getDades () {
-  this.http.get('acc/databases/{database}/documents',
-  {nom, cognom}).subscribe(response => { console.log(response);
-   });
-   }
-*/
+  public getUserDades(){
+    return this.usuariDades.getDades()
+  }
 
   ponerNombreRojo() {
     this.nombre.nativeElement.style.color = this.canmbiarrojo ? 'red' : 'black'
@@ -48,29 +42,31 @@ export class Panelusuari implements OnInit{
   quitarCognomAzul() {
     this.cognom.nativeElement.style.color = 'black';
   }
-
-  get usuariIniciat(): UsuariData | null {
-    return this.iniciaSessio.getUsuariIniciat();
+  
+  public cerrarSesion(){
+    this.usuariDades.cerrarSesion().subscribe({
+      next: (res) => {
+        alert(res.mensaje)
+        this.usuariDades.setIniciatSessio(false)
+        this.router.navigate(["/registre"])
+      },
+      error: (err) => {
+        alert("Error: " + err.error.message)
+      }
+    })
   }
 
-  get iniciat(): boolean {
-    return this.iniciaSessio.getIniciatSessio();
-  }
-
-  tancarSessio() {
-    this.iniciaSessio.tancarSessio();
-    alert('Sesión cerrada');
-    this.router.navigate(['/registre']);
-  }
-
-  eliminarCuenta() {
-    if (!this.usuariIniciat) return;
-
-    const confirmar = confirm('¿Seguro que quieres eliminar tu cuenta?');
-    if (!confirmar) return;
-
-    this.registrar.clearUsuari(this.usuariIniciat.Correu);
-    this.tancarSessio();
+  public eliminarMiCuenta(){
+    this.usuariDades.borrarMiCuenta().subscribe({
+      next: (res) => {
+        alert(res.mensaje)
+        this.usuariDades.setIniciatSessio(false)
+        this.router.navigate(["/registre"])
+      },
+      error: (err) => {
+        alert("Error: " + err.error.message)
+      }
+    })
   }
 
 }

@@ -2,21 +2,21 @@
   <h1>Panel de Usuario</h1>
   
   <div class="user-info">
-  <p #nombre (click)="ponerNombreRojo()">
-    <strong>Nombre:</strong> {{ usuariIniciat?.Nom || 'No disponible' }}
-  </p>
+  <p #nombre (click)="ponerNombreRojo()">Nom: {{getUserDades()?.nom}}</p>
 
-  <p #cognom (mouseenter)="ponerCognomAzul()"(mouseleave)="quitarCognomAzul()">
-    <strong>Apellidos:</strong> {{ usuariIniciat?.Cognom || 'No disponible' }}
-  </p>    
-  <p><strong>Correo:</strong> {{ usuariIniciat?.Correu || 'No disponible' }}</p>
-    <p><strong>Dirección:</strong> {{ usuariIniciat?.direccio || 'No disponible' }}</p>
-    <p><strong>Teléfono:</strong> {{ usuariIniciat?.Telefon || 'No disponible' }}</p>
+  <p #cognom (mouseenter)="ponerCognomAzul()" (mouseleave)="quitarCognomAzul()">Cognom: {{getUserDades()?.cognom}}</p>
+
+  <p>Correo: {{getUserDades()?.correu}}</p>
+
+  <p>Direccion: {{getUserDades()?.direccio}}</p>
+
+  <p>Telefono: {{getUserDades()?.telefon}}</p>
+
     <p>Clica en el nombre o pasa el mouse sobre el apellido para que cambien de color! (Se ha usado @ViewChild para estos eventos)</p>
   </div>
 
   <div class="user-actions">
-    <button class="btn logout" (click)="tancarSessio()">Cerrar sesión</button>
-    <button class="btn delete" (click)="eliminarCuenta()">Eliminar mi cuenta</button>
+    <button class="btn logout" (click)="cerrarSesion()">Cerrar sesión</button>
+    <button class="btn delete" (click)="eliminarMiCuenta()">Eliminar mi cuenta</button>
   </div>
 </div>
