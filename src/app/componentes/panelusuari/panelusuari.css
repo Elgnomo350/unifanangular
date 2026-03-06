@@ -64,3 +64,7 @@
 .btn.delete-all:hover {
   background-color: #71368a;
 }
+
+p{
+  color: black;
+}
