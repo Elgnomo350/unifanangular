@@ -8,6 +8,8 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const crypto = require("node:crypto");
 require('dotenv').config();
+const nodemailer = require("nodemailer")
+const google = require("googleapis")
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -61,6 +63,30 @@ const usuarioSchema = z.object({
 
 const SECRET_KEY = process.env.SECRET_KEY; 
 
+const oAuth2Client = new google.Auth.OAuth2Client(
+  process.env.CLIENTID,
+  process.env.CLIENTSECRET,
+  "https://developers.google.com/oauthplayground",
+); 
+
+oAuth2Client.setCredentials({
+  refresh_token: process.env.REFRESHTOKEN
+});
+
+async function getToken() {
+  return await oAuth2Client.getAccessToken();
+}
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: "raprojecte@gmail.com",
+      clientId: process.env.CLIENTID,
+      clientSecret: process.env.CLIENTSECRET,
+      refreshToken: process.env.REFRESHTOKEN,
+      accessToken: getToken()
+    }
+});
 
 async function comprovacio(request){
   try {
@@ -223,16 +249,15 @@ app.get('/loggedin', async (req, res) => {
       return res.status(comprovar.code).json({message: comprovar.message})
     }
     
-    const { code, token, dades, activeSessions, user } = comprovar
 
-    res.cookie('token', token, {
+    res.cookie('token', comprovar.token, {
           httpOnly: true,
           secure: false,
           sameSite: 'lax',
           maxAge: 1000 * 60 * 60 * 24 * 7
     })
 
-    res.status(200).json({ token: token });
+    res.status(200).json({ token: comprovar.token });
     return 
 
   } catch (error) {
@@ -283,10 +308,8 @@ app.delete("/borrarmicuenta", async (req, res) => {
       return res.status(comprovar.code).json({message: comprovar.message})
     }
 
-    const { code, token, dades, activeSessions, user } = comprovar
-
-    db.collection("unifan").doc(dades.correu).delete().then(() => {
-    return res.status(200).json({mensaje: "Cuenta " + dades.correu + " eliminada correctamente"})
+    db.collection("unifan").doc(comprovar.dades.correu).delete().then(() => {
+    return res.status(200).json({mensaje: "Cuenta " + comprovar.dades.correu + " eliminada correctamente"})
   })
 
   } catch (error) {
@@ -351,7 +374,6 @@ app.patch("/modificarcampo", async (req, res) => {
 
 app.patch("/modificarcorreu", async (req, res) => {
   try {
-
     const emailformat = z.email({ error: "Email con formato incorrecto, sigue el formato text@text.text" });
     const resultado = emailformat.safeParse(req.body.noucorreu);
 
@@ -391,6 +413,129 @@ app.patch("/modificarcorreu", async (req, res) => {
   }
 })
 
+async function cambiarContraseña(correo, nuevaPasswd){
+  const cambiaruser = db.collection("unifan").doc(correo)
+  await cambiaruser.set({passwd: nuevaPasswd, sessionID: []}, {merge: true})
+}
 
+app.post("/cambiarpasswd", async (req, res) => {
+  try {
+    const stringFormat = z.string()
+    .refine(campo => campo.trim().length > 0, {
+    error: "La contraseña no puede estar vacía"
+    })
+    .regex(/[A-Z]/, {error: "Debe tener una mayúscula"})
+    .regex(/[0-9]/, {error: "Debe tener un número"})
+
+    const resultado = stringFormat.safeParse(req.body.nuevaPasswd);
+
+    if (!resultado.success) {
+      res.status(400).json({
+        message: resultado.error.issues[0].message
+      })
+      return;
+    }
+
+    const comprovar = await comprovacio(req)
+
+    if(comprovar.code !== 200){
+      return res.status(comprovar.code).json({message: comprovar.message})
+    }
+
+    await cambiarContraseña(comprovar.dades.correu, req.body.nuevaPasswd)
+    
+    res.status(200).send({mensaje: "Contraseña cambiada correctamente"})
+
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+})
+
+app.post("/mandarlinkolvidarpasswd", async (req, res) => {
+  try {
+
+  const user = await db.collection("unifan").doc(req.body.correu).get()
+  if(!user.exists) return res.status(404).send({message: "El usuario no existe"})
+
+  const randomNumbers = crypto.randomBytes(4).readUInt32BE(0).toString()
+  
+  const tokenJSON = {
+    tokenID: randomNumbers,
+    correu: req.body.correu
+  }
+
+  const temporalToken = jwt.sign(tokenJSON, SECRET_KEY, {expiresIn: "30m"})
+
+  const resetLink = `http://localhost:4200/fernovapasswd?token=${temporalToken}`
+
+  await db.collection("unifan").doc("temporaltokens").set({sessions: admin.firestore.FieldValue.arrayUnion(temporalToken)}, {merge: true})
+
+  await transporter.sendMail({
+  from: "Soporte unifan",
+  to: req.body.correu,
+  subject: "Cambio de contraseña",
+  html: `
+    <h2>Cambiar contraseña</h2>
+    <p>Haz clic en el siguiente enlace para cambiar tu contraseña:</p>
+    <a href="${resetLink}">${resetLink}</a>
+    <p>Este enlace expirará en 30 minutos.</p>
+    <p>No compartas esto a nadie.</p>
+  `
+  });
+
+  res.status(200).send({mensaje: "Se ha enviado un enlace a tu correo"})
+
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+})
+
+
+app.post("/actualitzarpasswd", async (req, res) => {
+  try {
+
+    const stringFormat = z.string()
+    .refine(campo => campo.trim().length > 0, {
+    error: "La contraseña no puede estar vacía"
+    })
+    .regex(/[A-Z]/, {error: "Debe tener una mayúscula"})
+    .regex(/[0-9]/, {error: "Debe tener un número"})
+
+    const resultado = stringFormat.safeParse(req.body.nuevaPasswd);
+
+    if (!resultado.success) {
+      res.status(400).json({
+        message: resultado.error.issues[0].message
+      })
+      return;
+    }
+
+    const tempTokens = db.collection("unifan").doc("temporaltokens")
+    const sessions = (await tempTokens.get()).data().sessions
+
+    if (!req.body.token || !sessions.includes(req.body.token)) {
+      return res.status(403).send({message: "Token invalido o no existente"})
+    }
+
+    const token = jwt.verify(req.body.token, SECRET_KEY)
+
+    await cambiarContraseña(token.correu, req.body.nuevaPasswd)
+
+    await db.collection("unifan").doc("temporaltokens").update({
+      sessions: admin.firestore.FieldValue.arrayRemove(req.body.token)
+    });
+
+    res.status(200).send({mensaje: "Contraseña cambiada con exito, inicie sesión"})
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+
+})
 
 

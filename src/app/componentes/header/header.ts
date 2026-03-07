@@ -11,18 +11,18 @@ import { Usuaridades } from '../../serveis/usuaridades/usuaridades';
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header{
+export class Header implements OnInit{
 
   constructor(private getasset: Getasset, private getroute: Getroute, 
     private manejarCistella: Manejarcistella, private router: Router, private usuaridades: Usuaridades,
-    private cgr: ChangeDetectorRef){
+    private cgr: ChangeDetectorRef){}  
 
-    this.usuaridades.getIniciatSessio().subscribe(iniciat => {
+  ngOnInit(): void {
+      this.usuaridades.getIniciatSessio().subscribe(iniciat => {
       this.iniciatSessio = iniciat
       this.cgr.detectChanges()
     })
-    
-  }  
+  }
 
   private iniciatSessio: boolean = false; 
 

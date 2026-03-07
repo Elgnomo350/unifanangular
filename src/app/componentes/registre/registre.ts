@@ -75,4 +75,8 @@ export class Registre implements OnInit{
     this.router.navigate(['/panelusuari']);
   }
 
+  public recuperarpasswd(){
+    this.router.navigate(["/recuperarpasswd"])
+  }
+
 }

@@ -66,6 +66,19 @@ public modificarCorreo(correo: string){
     return this.httpclient.patch<{mensaje: string}>("http://localhost:23000/modificarcorreu", {noucorreu: correo},{withCredentials: true})
 }
 
+public cambiarPasswd(nuevaPasswd: string){
+    return this.httpclient.post<{mensaje: string}>("http://localhost:23000/cambiarpasswd", 
+    {nuevaPasswd: nuevaPasswd}, {withCredentials: true})
+}
+
+public conseguirtokenpasswd(correu: string){
+  return this.httpclient.post<{mensaje: string}>("http://localhost:23000/mandarlinkolvidarpasswd", {correu: correu})
+}
+
+public actualizarpasswd(passwd: string, token: string){
+  return this.httpclient.post<{mensaje: string}>("http://localhost:23000/actualitzarpasswd", {nuevaPasswd: passwd, token: token})
+}
+
 public getDades(){
   return this.dades;
 }
