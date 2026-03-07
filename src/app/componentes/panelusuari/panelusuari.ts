@@ -77,7 +77,8 @@ export class Panelusuari implements OnInit{
   direccio: false,
   telefon: false,
   infoSensibles: false,
-  correo: false
+  correo: false,
+  passwd: false
   };
 
   public getPropietats(){
@@ -115,6 +116,27 @@ export class Panelusuari implements OnInit{
           sessionID: ""        
         })
         this.usuariDades.setIniciatSessio(false);
+        this.router.navigate(["/registre"])
+      },
+      error: (err) => {
+        alert("Error: " + err.error.message)
+      }
+    })
+  }
+
+  public cambiarPasswd(nuevaPasswd: string){
+    this.usuariDades.cambiarPasswd(nuevaPasswd).subscribe({
+      next: (res) => {
+        this.usuariDades.setDades({  
+          nom: "",
+          cognom: "",
+          correu: "",
+          direccio: "",
+          telefon: "",
+          sessionID: ""        
+        })
+        this.usuariDades.setIniciatSessio(false);
+        alert(res.mensaje)
         this.router.navigate(["/registre"])
       },
       error: (err) => {

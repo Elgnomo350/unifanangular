@@ -83,7 +83,12 @@
       </div>
 
       <div class="sensitive-row" style="display: inline-block;">
-        <button class="btn">Cambiar contraseña</button>
+        <button class="btn" (click)="toggleEditar('passwd')">Cambiar contraseña</button>
+
+        @if(getPropietats()["passwd"]){
+        <input #inputPasswd type="text" placeholder="Nueva contraseña">
+        <button (click)="cambiarPasswd(inputPasswd.value)">Enviar</button>
+        }
       </div>
 
     </div>

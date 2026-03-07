@@ -5,5 +5,7 @@ export const AppPaths: Record<string, string> = {
   registre: 'registre',
   cistella: 'cistella',
   condicions: 'condicions',
-  panel: 'panelusuari'
+  panel: 'panelusuari',
+  recuperarpasswd: 'recuperarpasswd',
+  fernovapasswd: 'fernovapasswd'
 } as const;
