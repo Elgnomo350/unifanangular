@@ -9,6 +9,7 @@ import { Index } from './componentes/index';
 import { Panelusuari } from './componentes/panelusuari/panelusuari';
 import { Recuperarpasswd } from './componentes/recuperarpasswd/recuperarpasswd';
 import { Fernovapasswd } from './componentes/fernovapasswd/fernovapasswd';
+import { Confirmarusuari } from './componentes/confirmarusuari/confirmarusuari';
 
 //Parte de la investigacion punto 4.1, rutas
 export const routes: Routes = [
@@ -21,5 +22,6 @@ export const routes: Routes = [
     {path: AppPaths['index'], redirectTo: "/index", pathMatch: "full"},
     {path: 'index', component: Index },
     {path: AppPaths['recuperarpasswd'], component: Recuperarpasswd},
-    {path: AppPaths['fernovapasswd'], component: Fernovapasswd}
+    {path: AppPaths['fernovapasswd'], component: Fernovapasswd},
+    {path: AppPaths['confirmarusuari'], component: Confirmarusuari}
 ];

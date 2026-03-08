@@ -80,7 +80,7 @@ const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       type: "OAuth2",
-      user: "raprojecte@gmail.com",
+      user: "noreplyunifandam1@gmail.com",
       clientId: process.env.CLIENTID,
       clientSecret: process.env.CLIENTSECRET,
       refreshToken: process.env.REFRESHTOKEN,
@@ -125,6 +125,8 @@ async function comprovacio(request){
 }
 
 app.post("/registrar", async (req, res) => {
+  try {
+
     const result = usuarioSchema.safeParse(req.body);
 
      if (!result.success) {
@@ -135,26 +137,36 @@ app.post("/registrar", async (req, res) => {
       return;
     }
 
-  const { nom, cognom, correu, passwd, direccio, telefon } = result.data;
 
-  try {
-      const user = db.collection('unifan').doc(correu);
+    const user = db.collection('unifan').doc(result.data.correu);
 
-      if((await user.get()).exists){
-      res.status(409).json({ message: "El usuario " + correu + " ya está registrado, use otro correo." });
+    if((await user.get()).exists){
+      res.status(409).json({ message: "El usuario " + result.data.correu + " ya está registrado, use otro correo." });
       return;
-      }
+    }
 
-      await user.set({
-      nom: nom,
-      cognom: cognom,
-      correu: correu,
-      passwd: passwd,
-      direccio: direccio,
-      telefon: telefon
+    const sessionID = crypto.randomBytes(4).readUInt32BE(0).toString()
+  
+    const token = jwt.sign({data: result.data, sessionID: sessionID}, SECRET_KEY, {expiresIn: "30m"})
+    const confirmarLink = `http://localhost:4200/confirmarusuari?token=${token}`
+    await db.collection("unifan").doc("registresessions").set({
+        sessions: admin.firestore.FieldValue.arrayUnion(token),
+    }, {merge: true})
+
+    await transporter.sendMail({
+    from: "Soporte unifan",
+    to: req.body.correu,
+    subject: "Confirmar email",
+    html: `
+      <h2>Confirmar registro</h2>
+      <p>Haz clic en el siguiente enlace para confirmar tu registro:</p>
+      <a href="${confirmarLink}">${confirmarLink}</a>
+      <p>Este enlace expirará en 30 minutos.</p>
+      <p>No compartas esto a nadie.</p>
+    `
     });
 
-    res.status(201).json({ mensaje: "Usuario " + correu + " registrado" });
+    res.status(201).json({ mensaje: "Un enlace de verificacion ha sido mandado a su correo" });
     return;
   } catch (error) {
     const err = error.message
@@ -164,6 +176,41 @@ app.post("/registrar", async (req, res) => {
 
 })
 
+app.post("/ferregistre", async (req, res) => {
+  
+  try {
+
+  const info = jwt.verify(req.body.token, SECRET_KEY)
+  const tempTokens = db.collection("unifan").doc("registresessions")
+  const activeSessions = (await tempTokens.get()).data().sessions
+
+  if(!req.body.token || !activeSessions.includes(req.body.token)){
+    return res.status(403).send({message: "Token invalido o no existente"})
+  }
+
+  const { nom, cognom, correu, passwd, direccio, telefon } = info.data;
+  const user = db.collection("unifan").doc(correu)
+
+  await db.collection("unifan").doc("temporaltokens").update({
+      sessions: admin.firestore.FieldValue.arrayRemove(req.body.token)
+  });
+
+  await user.set({
+      nom: nom,
+      cognom: cognom,
+      correu: correu,
+      passwd: passwd,
+      direccio: direccio,
+      telefon: telefon
+  });
+
+  res.status(201).json({ mensaje: "Usuario " + correu + " registrado" });
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Hi ha hagut un error: " + err });
+    return;
+  }
+})
 
 app.post("/iniciarsessio", async (req, res) => {
     const result = usuarioIniciarSesion.safeParse(req.body);

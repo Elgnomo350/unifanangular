@@ -79,6 +79,10 @@ public actualizarpasswd(passwd: string, token: string){
   return this.httpclient.post<{mensaje: string}>("http://localhost:23000/actualitzarpasswd", {nuevaPasswd: passwd, token: token})
 }
 
+public confirmarcorreu(token: string){
+  return this.httpclient.post<{mensaje: string}>("http://localhost:23000/ferregistre", {token: token})
+}
+
 public getDades(){
   return this.dades;
 }
@@ -97,6 +101,18 @@ public getIniciatSessioValue(): boolean{
 
 public setIniciatSessio(bool: boolean){
   this.iniciatSessioBhvior.next(bool)
+}
+
+public limpiarUser(){
+    this.setDades({  
+          nom: "",
+          cognom: "",
+          correu: "",
+          direccio: "",
+          telefon: "",
+          sessionID: ""        
+    })
+    this.setIniciatSessio(false);
 }
 
 }
