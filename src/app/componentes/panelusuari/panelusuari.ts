@@ -48,7 +48,7 @@ export class Panelusuari implements OnInit{
     this.usuariDades.cerrarSesion().subscribe({
       next: (res) => {
         alert(res.mensaje)
-        this.usuariDades.setIniciatSessio(false)
+        this.usuariDades.limpiarUser()
         this.router.navigate(["/registre"])
       },
       error: (err) => {
@@ -61,7 +61,7 @@ export class Panelusuari implements OnInit{
     this.usuariDades.borrarMiCuenta().subscribe({
       next: (res) => {
         alert(res.mensaje)
-        this.usuariDades.setIniciatSessio(false)
+        this.usuariDades.limpiarUser()
         this.router.navigate(["/registre"])
       },
       error: (err) => {
@@ -107,15 +107,7 @@ export class Panelusuari implements OnInit{
     this.usuariDades.modificarCorreo(correu).subscribe({
       next: (res) => {
         alert(res.mensaje)
-        this.usuariDades.setDades({  
-          nom: "",
-          cognom: "",
-          correu: "",
-          direccio: "",
-          telefon: "",
-          sessionID: ""        
-        })
-        this.usuariDades.setIniciatSessio(false);
+        this.usuariDades.limpiarUser()
         this.router.navigate(["/registre"])
       },
       error: (err) => {
@@ -127,15 +119,7 @@ export class Panelusuari implements OnInit{
   public cambiarPasswd(nuevaPasswd: string){
     this.usuariDades.cambiarPasswd(nuevaPasswd).subscribe({
       next: (res) => {
-        this.usuariDades.setDades({  
-          nom: "",
-          cognom: "",
-          correu: "",
-          direccio: "",
-          telefon: "",
-          sessionID: ""        
-        })
-        this.usuariDades.setIniciatSessio(false);
+        this.usuariDades.limpiarUser()
         alert(res.mensaje)
         this.router.navigate(["/registre"])
       },
