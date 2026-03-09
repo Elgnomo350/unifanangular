@@ -124,6 +124,7 @@ async function comprovacio(request){
   }
 }
 
+//Aqui se ve el 4.2 de la investigación, verificar correo
 app.post("/registrar", async (req, res) => {
   try {
 
@@ -465,6 +466,7 @@ async function cambiarContraseña(correo, nuevaPasswd){
   await cambiaruser.set({passwd: nuevaPasswd, sessionID: []}, {merge: true})
 }
 
+//Aqui se ve el 4.1 de la investigación, cambiar contraseña
 app.post("/cambiarpasswd", async (req, res) => {
   try {
     const stringFormat = z.string()
@@ -517,7 +519,8 @@ app.post("/mandarlinkolvidarpasswd", async (req, res) => {
 
   const resetLink = `http://localhost:4200/fernovapasswd?token=${temporalToken}`
 
-  await db.collection("unifan").doc("temporaltokens").set({sessions: admin.firestore.FieldValue.arrayUnion(temporalToken)}, {merge: true})
+  await db.collection("unifan").doc("temporaltokens").set({sessions: admin.firestore.FieldValue.arrayUnion(temporalToken)}, 
+  {merge: true})
 
   await transporter.sendMail({
   from: "Soporte unifan",
