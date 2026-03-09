@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { CistellaInterface, Manejarcistella } from '../manejarcistella/manejarcistella';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class Usuaridades {
   private iniciatSessio = this.iniciatSessioBhvior.asObservable();
 
 
-  constructor(private httpclient: HttpClient) {
+  constructor(private httpclient: HttpClient, private manejarCistella: Manejarcistella) {
     this.checkSessio()
   }
   
@@ -24,11 +25,12 @@ export class Usuaridades {
       correu: string,
       passwd: string,
       direccio: string,
-      telefon: string
+      telefon: string,
+      cesta: CistellaInterface[]
     ) {
 
     return this.httpclient.post<{mensaje: string}>("http://localhost:23000/registrar", 
-      {nom, cognom, correu, passwd, direccio, telefon})
+      {nom, cognom, correu, passwd, direccio, telefon, cesta})
 }  
 
 public iniciarSessio(correu: string, passwd: string){
@@ -36,9 +38,9 @@ public iniciarSessio(correu: string, passwd: string){
       {correu, passwd}, {withCredentials: true})
 } 
 
-public cerrarSesion(){
+public cerrarSesion(cesta: CistellaInterface[]){
     return this.httpclient.post<{mensaje: string, token: string}>("http://localhost:23000/cerrarsesion", 
-      {}, {withCredentials: true})
+      {cesta: cesta}, {withCredentials: true})
 }
 
 public checkSessio() {
@@ -110,8 +112,10 @@ public limpiarUser(){
           correu: "",
           direccio: "",
           telefon: "",
-          sessionID: ""        
+          sessionID: "",
+          cesta: []
     })
+    this.manejarCistella.gcistella = this.dades!.cesta
     this.setIniciatSessio(false);
 }
 
@@ -124,6 +128,7 @@ export interface UsuariData {
   direccio: string;
   telefon: string;
   sessionID: string;
+  cesta: CistellaInterface[]
 }
 
 
