@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingresar contraseña</title>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Introducir contraseña</h1>
+    <form id="passwordForm" (ngSubmit)="actualitzarpasswd(passwd.value)">
+      <input type="password" #passwd placeholder="Contraseña" required>
+      <button type="submit">Enviar</button>
+    </form>
+    <div class="note">Introduce tu nueva contraseña para continuar</div>
+  </div>
+</body>
+</html>
