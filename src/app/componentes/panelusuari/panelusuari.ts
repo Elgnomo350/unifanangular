@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Usuaridades, UsuariData } from '../../serveis/usuaridades/usuaridades';
 import { jwtDecode } from 'jwt-decode';
+import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
 
 @Component({
   selector: 'app-panelusuari',
@@ -16,7 +17,7 @@ export class Panelusuari implements OnInit{
   @ViewChild('cognom') cognom!: ElementRef<HTMLParagraphElement>;
   private canmbiarrojo: boolean = true;
 
-  constructor(private router: Router, private usuariDades: Usuaridades) {}
+  constructor(private router: Router, private usuariDades: Usuaridades, private manejarcistella: Manejarcistella) {}
 
   ngOnInit(): void {
     this.usuariDades.getIniciatSessio().subscribe(iniciat => {
@@ -45,7 +46,7 @@ export class Panelusuari implements OnInit{
   }
   
   public cerrarSesion(){
-    this.usuariDades.cerrarSesion().subscribe({
+    this.usuariDades.cerrarSesion(this.manejarcistella.gcistella).subscribe({
       next: (res) => {
         alert(res.mensaje)
         this.usuariDades.limpiarUser()

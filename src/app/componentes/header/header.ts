@@ -29,17 +29,17 @@ export class Header implements OnInit{
   public getNumProductes(){
     let num = 0
     for (let index = 0; index < this.manejarCistella.gcistella.length; index++) {
-      num += this.manejarCistella.gcistella[index].gquantitat
+      num += this.manejarCistella.gcistella[index].quantitatcomprada
     }
-    return 0
+    return num
   }
   
   public tancarSessio() {
-    this.usuaridades.cerrarSesion().subscribe({
+    this.usuaridades.cerrarSesion(this.manejarCistella.gcistella).subscribe({
       next: (res) => {
-        alert(res.mensaje)
-        this.usuaridades.setIniciatSessio(false)
         this.router.navigate(["/registre"])
+        alert(res.mensaje)
+        this.usuaridades.limpiarUser()
       },
       error: (err) => {
         alert("Error: " + err.error.message)

@@ -3,6 +3,7 @@ import { Usuaridades, UsuariData } from '../../serveis/usuaridades/usuaridades';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
 
 @Component({
   selector: 'app-registre',
@@ -11,7 +12,7 @@ import { jwtDecode } from 'jwt-decode';
   styleUrl: './registre.css',
 })
 export class Registre implements OnInit{
-  constructor(private usuariDades: Usuaridades,private router: Router){}
+  constructor(private usuariDades: Usuaridades,private router: Router, private manejarcistella: Manejarcistella){}
 
   nom = '';
   cognom = '';
@@ -32,7 +33,7 @@ export class Registre implements OnInit{
 
   public registrarse(){
 
-    this.usuariDades.setUsuari(this.nom, this.cognom, this.email, this.passwd, this.direccio, this.telefon)
+    this.usuariDades.setUsuari(this.nom, this.cognom, this.email, this.passwd, this.direccio, this.telefon, this.manejarcistella.gcistella)
     .subscribe({
     next: (res) => {
       alert(res.mensaje);
@@ -59,6 +60,8 @@ export class Registre implements OnInit{
         const dades = jwtDecode<UsuariData>(res.token);
         this.usuariDades.setDades(dades)
         this.usuariDades.setIniciatSessio(true);
+
+        this.manejarcistella.gcistella = dades.cesta
 
         this.loginEmail = '';
         this.loginPass = '';

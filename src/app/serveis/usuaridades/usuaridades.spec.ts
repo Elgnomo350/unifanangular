@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Usuaridades, UsuariData } from './usuaridades';
+import { Manejarcistella } from '../manejarcistella/manejarcistella';
 
 // JWT mínim parsejable: jwtDecode no valida signatura, només llegeix el payload base64url.
 // Els imports ESM són immutables al bundler d'Angular/esbuild, per tant NO es pot
@@ -22,6 +23,7 @@ describe("Usuaridades - Cas d'ús: Registre d'usuari", () => {
     direccio: 'Carrer Major 1',
     telefon: '612345678',
     sessionID: 'abc123',
+    cesta: [],
   };
 
   const mockJwt = makeJwt(mockUsuariData);
@@ -29,7 +31,10 @@ describe("Usuaridades - Cas d'ús: Registre d'usuari", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [Usuaridades],
+      providers: [
+        Usuaridades,
+        { provide: Manejarcistella, useValue: { gcistella: [] } },
+      ],
     });
 
     service  = TestBed.inject(Usuaridades);
@@ -49,7 +54,7 @@ describe("Usuaridades - Cas d'ús: Registre d'usuari", () => {
   describe('setUsuari()', () => {
     it('ha de fer POST a /registrar amb les dades correctes', () => {
       service
-        .setUsuari('Joan', 'Garcia', 'joan@example.com', '1234', 'Carrer Major 1', '612345678')
+        .setUsuari('Joan', 'Garcia', 'joan@example.com', '1234', 'Carrer Major 1', '612345678', [])
         .subscribe();
 
       const req = httpMock.expectOne('http://localhost:23000/registrar');
@@ -61,6 +66,7 @@ describe("Usuaridades - Cas d'ús: Registre d'usuari", () => {
         passwd: '1234',
         direccio: 'Carrer Major 1',
         telefon: '612345678',
+        cesta: [],
       });
       req.flush({ mensaje: 'Usuari registrat correctament' });
     });
@@ -69,7 +75,7 @@ describe("Usuaridades - Cas d'ús: Registre d'usuari", () => {
       let result: { mensaje: string } | undefined;
 
       service
-        .setUsuari('Joan', 'Garcia', 'joan@example.com', '1234', 'Carrer Major 1', '612345678')
+        .setUsuari('Joan', 'Garcia', 'joan@example.com', '1234', 'Carrer Major 1', '612345678', [])
         .subscribe((res) => (result = res));
 
       const req = httpMock.expectOne('http://localhost:23000/registrar');
@@ -82,7 +88,7 @@ describe("Usuaridades - Cas d'ús: Registre d'usuari", () => {
       let errorResult: any;
 
       service
-        .setUsuari('Joan', 'Garcia', 'joan@example.com', '1234', 'Carrer Major 1', '612345678')
+        .setUsuari('Joan', 'Garcia', 'joan@example.com', '1234', 'Carrer Major 1', '612345678', [])
         .subscribe({ error: (err) => (errorResult = err) });
 
       const req = httpMock.expectOne('http://localhost:23000/registrar');
@@ -92,11 +98,11 @@ describe("Usuaridades - Cas d'ús: Registre d'usuari", () => {
     });
 
     it('ha de permetre cridar amb camps buits (validació delegada al servidor)', () => {
-      service.setUsuari('', '', '', '', '', '').subscribe({ error: () => {} });
+      service.setUsuari('', '', '', '', '', '', []).subscribe({ error: () => {} });
 
       const req = httpMock.expectOne('http://localhost:23000/registrar');
       expect(req.request.body).toEqual({
-        nom: '', cognom: '', correu: '', passwd: '', direccio: '', telefon: '',
+        nom: '', cognom: '', correu: '', passwd: '', direccio: '', telefon: '', cesta: [],
       });
       req.flush({ message: 'Error' }, { status: 400, statusText: 'Bad Request' });
     });

@@ -53,7 +53,19 @@ const usuarioSchema = z.object({
   })
   .refine((campo) => campo.trim().length > 0, {
     error: "El numero de telefono no puede estar vacío"
-  }),});
+  }),
+
+  cesta: z.array(
+    z.object({
+      foto: z.string(),
+      nom: z.string(),
+      quantitatcomprada: z.number(),
+      preutotal: z.number(),
+      preuperunitat: z.number()
+    })
+  )
+
+});
 
 
   const usuarioIniciarSesion = z.object({
@@ -189,7 +201,7 @@ app.post("/ferregistre", async (req, res) => {
     return res.status(403).send({message: "Token invalido o no existente"})
   }
 
-  const { nom, cognom, correu, passwd, direccio, telefon } = info.data;
+  const { nom, cognom, correu, passwd, direccio, telefon, cesta } = info.data;
   const user = db.collection("unifan").doc(correu)
 
   await db.collection("unifan").doc("temporaltokens").update({
@@ -202,7 +214,8 @@ app.post("/ferregistre", async (req, res) => {
       correu: correu,
       passwd: passwd,
       direccio: direccio,
-      telefon: telefon
+      telefon: telefon,
+      cesta: cesta
   });
 
   res.status(201).json({ mensaje: "Usuario " + correu + " registrado" });
@@ -239,7 +252,7 @@ app.post("/iniciarsessio", async (req, res) => {
 
     if(passwd === userData.passwd){    
 
-    const { nom, cognom, correu, passwd, direccio, telefon } = userData;
+    const { nom, cognom, correu, passwd, direccio, telefon, cesta } = userData;
     
     
     const sessionID = crypto.randomBytes(4).readUInt32BE(0).toString()
@@ -254,7 +267,8 @@ app.post("/iniciarsessio", async (req, res) => {
       correu: correu,
       direccio: direccio,
       telefon: telefon,
-      sessionID: sessionID
+      sessionID: sessionID,
+      cesta: cesta
     }
     
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "7d" });
@@ -320,7 +334,26 @@ app.post("/cerrarsesion", async (req, res) => {
     
   try {
 
-    const comprovar = await comprovacio(req)
+  const cestaSchema = z.array(
+    z.object({
+    foto: z.string(),
+    nom: z.string(),
+    quantitatcomprada: z.number(),
+    preutotal: z.number(),
+    preuperunitat: z.number()
+    })
+  )
+  
+  const resultado = cestaSchema.safeParse(req.body.cesta);
+
+  if (!resultado.success) {
+      res.status(400).json({
+        message: resultado.error.issues[0].message
+      })
+      return;
+  }
+
+  const comprovar = await comprovacio(req)
 
     if(comprovar.code !== 200){
       return res.status(comprovar.code).json({message: comprovar.message})
@@ -329,7 +362,7 @@ app.post("/cerrarsesion", async (req, res) => {
     const { code, token, dades, activeSessions, user } = comprovar
 
     const updatedSessions = activeSessions.filter(s => s !== dades.sessionID);
-    await user.update({ activeSessions: updatedSessions });
+    await user.update({ activeSessions: updatedSessions, cesta: req.body.cesta});
 
     res.cookie('token', token, {
           httpOnly: true,

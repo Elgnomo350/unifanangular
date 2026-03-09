@@ -26,6 +26,7 @@ describe("Registre - Cas d'ús: Registre d'usuari", () => {
     direccio: 'Carrer Major 1',
     telefon: '612345678',
     sessionID: 'abc123',
+    cesta: [],
   };
 
   const mockJwt = makeJwt(mockUsuariData);
@@ -91,7 +92,7 @@ describe("Registre - Cas d'ús: Registre d'usuari", () => {
       component.registrarse();
 
       expect(usuaridadesMock.setUsuari).toHaveBeenCalledWith(
-        'Joan', 'Garcia', 'joan@example.com', '1234', 'Carrer Major 1', '612345678'
+        'Joan', 'Garcia', 'joan@example.com', '1234', 'Carrer Major 1', '612345678', []
       );
     });
 

@@ -4,86 +4,65 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class Manejarcistella {
-  
-  constructor(){
-  
-  }
 
-  private cistellaarray: Array<CistellaClass> = [] 
-  private cistelles: Record<string, CistellaClass[]> = {}
+  constructor() {}
+
+  private cistellaarray: CistellaInterface[] = [];
 
   public get gcistella() {
-    return this.cistellaarray
+    return this.cistellaarray;
   }
 
-  public getCistelles(){
-    return this.cistelles
+  public set gcistella(cistella: CistellaInterface[]){
+    this.cistellaarray = cistella
   }
 
-  public guardarCistella(user: string){
-    this.cistelles[user] = [...this.cistellaarray]
-  }
+  public afegircistella(
+    foto: string,
+    nom: string,
+    quantitatcomprada: number,
+    preutotal: number,
+    preuperunitat: number
+  ) {
+    let volver = false;
 
-  public setCistella(user: string){
-    this.cistellaarray = [...(this.cistelles[user] ?? [])]
-  }
-
-  public afegircistella(foto: string, nom: string, quantitatcomprada: number, preutotal: number, preuperunitat: number){
-    let volver = false
     this.cistellaarray.forEach(element => {
-      if(element.gnom === nom){
-        element.sumar(quantitatcomprada)
-        volver = true
+      if (element.nom === nom) {
+        element.preutotal += element.preuperunitat * quantitatcomprada;
+        element.quantitatcomprada += quantitatcomprada;
+        volver = true;
       }
-    })
+    });
 
-    if (volver) return
-    this.cistellaarray.push(new CistellaClass(foto, nom, quantitatcomprada, preutotal, preuperunitat))
+    if (volver) return;
+
+    this.cistellaarray.push({
+      foto: foto,
+      nom: nom,
+      quantitatcomprada: quantitatcomprada,
+      preutotal: preutotal,
+      preuperunitat: preuperunitat
+    });
   }
 
-  public buidarcistella(){
-    this.cistellaarray = []
-  }
-
-  public borrarCuentacistella(user: string){
-    this.cistelles[user] = []
-  }
-
-  public borrarTotesCistelles(){
-    this.cistelles = {}
+  public buidarcistella() {
+    this.cistellaarray = [];
   }
 
   public eliminarProducto(index: number) {
-  this.cistellaarray.splice(index, 1);
+    this.cistellaarray.splice(index, 1);
   }
+
+  public sumar(item: CistellaInterface, quantitat: number) {
+  item.preutotal += item.preuperunitat * quantitat;
+  item.quantitatcomprada += quantitat;
+}
 }
 
-export class CistellaClass {
-  constructor(private foto: string, private nom: string, private quantitatcomprada: number, private preutotal: number, private preuperunitat: number) {
-  }
-
-  public get gfoto() : string {
-    return this.foto 
-  }
-
-  public get gnom() : string {
-    return this.nom
-  }
-
-  public get gquantitat() : number {
-    return this.quantitatcomprada
-  }
-
-  public sumar(quantitat: number) {
-    this.preutotal += this.preuperunitat * quantitat
-    this.quantitatcomprada += quantitat
-  }
-
-  public get gpreutotal() : number {
-    return this.preutotal
-  }
-
-  public get gpreuperunitat() : number {
-    return this.preuperunitat
-  }
+export interface CistellaInterface {
+  foto: string;
+  nom: string;
+  quantitatcomprada: number;
+  preutotal: number;
+  preuperunitat: number;
 }
