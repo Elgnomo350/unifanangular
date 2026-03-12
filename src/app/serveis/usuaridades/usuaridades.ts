@@ -65,7 +65,7 @@ public modificarDatos(campo: string, contenido: string){
 }
 
 public modificarCorreo(correo: string){
-    return this.httpclient.patch<{mensaje: string}>("http://localhost:23000/modificarcorreu", {noucorreu: correo},{withCredentials: true})
+    return this.httpclient.post<{mensaje: string}>("http://localhost:23000/modificarcorreu", {noucorreu: correo},{withCredentials: true})
 }
 
 public cambiarPasswd(nuevaPasswd: string){
@@ -83,6 +83,10 @@ public actualizarpasswd(passwd: string, token: string){
 
 public confirmarcorreu(token: string){
   return this.httpclient.post<{mensaje: string}>("http://localhost:23000/ferregistre", {token: token})
+}
+
+public confirmarcambiocorreo(token: string){
+  return this.httpclient.patch<{mensaje: string}>("http://localhost:23000/fermodificaciocorreu", {token: token})
 }
 
 public getDades(){

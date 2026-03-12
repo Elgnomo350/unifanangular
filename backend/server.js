@@ -136,6 +136,20 @@ async function comprovacio(request){
   }
 }
 
+async function limpiarSessionID(docId) {
+  try {
+    const db = admin.firestore();
+    const docRef = db.collection("usuaris").doc(docId);
+
+    await docRef.update({
+      sessionID: []
+    });
+
+  } catch (error) {
+    console.error("Error limpiando sessionID:", error);
+  }
+}
+
 //Aqui se ve el 4.2 de la investigación, verificar correo
 app.post("/registrar", async (req, res) => {
   try {
@@ -204,7 +218,7 @@ app.post("/ferregistre", async (req, res) => {
   const { nom, cognom, correu, passwd, direccio, telefon, cesta } = info.data;
   const user = db.collection("unifan").doc(correu)
 
-  await db.collection("unifan").doc("temporaltokens").update({
+  await db.collection("unifan").doc("registresessions").update({
       sessions: admin.firestore.FieldValue.arrayRemove(req.body.token)
   });
 
@@ -453,8 +467,9 @@ app.patch("/modificarcampo", async (req, res) => {
 
 })
 
-app.patch("/modificarcorreu", async (req, res) => {
+app.post("/modificarcorreu", async (req, res) => {
   try {
+
     const emailformat = z.email({ error: "Email con formato incorrecto, sigue el formato text@text.text" });
     const resultado = emailformat.safeParse(req.body.noucorreu);
 
@@ -470,23 +485,77 @@ app.patch("/modificarcorreu", async (req, res) => {
       return res.status(comprovar.code).json({message: comprovar.message})
     }
 
-    const { code, token, dades, activeSessions, user } = comprovar
-    
-    const nouUser = db.collection("unifan").doc(req.body.noucorreu);
+    const antigcorreu = comprovar.dades.correu
+    const user = db.collection('unifan').doc(req.body.noucorreu);
 
-    if((await nouUser.get()).exists){
+    if((await user.get()).exists){
       res.status(409).json({ message: "El usuario " + req.body.noucorreu + " ya está registrado, use otro correo." });
       return;
-    }    
-    
-    await nouUser.set((await user.get()).data());
-    await nouUser.set({correu: req.body.noucorreu}, {merge: true})
-    await nouUser.set({sessionID: []}, {merge: true})
+    }
 
-    db.collection("unifan").doc(dades.correu).delete().then(() => {
-    return res.status(200).json({mensaje: "Correo cambiado correctamente"})
-  })
+    const sessionID = crypto.randomBytes(4).readUInt32BE(0).toString()
+  
+    const token = jwt.sign({noucorreu: req.body.noucorreu, antigcorreu: antigcorreu, sessionID: sessionID}, SECRET_KEY, {expiresIn: "30m"})
+    const confirmarLink = `http://localhost:4200/confirmarcambiocorreo?token=${token}`
+    await db.collection("unifan").doc("cambiarcorreosessions").set({
+        sessions: admin.firestore.FieldValue.arrayUnion(token),
+    }, {merge: true})
 
+    await transporter.sendMail({
+    from: "Soporte unifan",
+    to: req.body.noucorreu,
+    subject: "Confirmar cambio de email",
+    html: `
+      <h2>Confirmar registro</h2>
+      <p>Haz clic en el siguiente enlace para confirmar el cambio de email:</p>
+      <a href="${confirmarLink}">${confirmarLink}</a>
+      <p>Este enlace expirará en 30 minutos.</p>
+      <p>No compartas esto a nadie.</p>
+    `
+    });
+
+    res.status(201).json({ mensaje: "Un enlace de verificacion ha sido mandado a su correo" });
+    return;
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Hi ha hagut un error: " + err });
+    return;
+  }
+
+})
+
+app.patch("/fermodificaciocorreu", async (req, res) => {
+  try {
+  
+  const info = jwt.verify(req.body.token, SECRET_KEY)
+  const tempTokens = db.collection("unifan").doc("cambiarcorreosessions")
+  const activeSessions = (await tempTokens.get()).data().sessions
+
+  if(!req.body.token || !activeSessions.includes(req.body.token)){
+    return res.status(403).send({message: "Token invalido o no existente"})
+  }
+
+  const noucorreu = info.noucorreu;
+  const antigcorreu = info.antigcorreu
+
+  const docAnticRef = db.collection("unifan").doc(antigcorreu);
+  const docNouRef = db.collection("unifan").doc(noucorreu);
+
+  await db.collection("unifan").doc("cambiarcorreosessions").update({
+      sessions: admin.firestore.FieldValue.arrayRemove(req.body.token)
+  });
+
+    const dades = (await docAnticRef.get()).data()
+
+    dades.correu = noucorreu;
+
+    await docNouRef.set(dades);
+
+    await docAnticRef.delete();
+
+    await limpiarSessionID(noucorreu);
+
+  res.status(201).json({ mensaje: "Correo " + antigcorreu + " cambiado a " + noucorreu });
   } catch (error) {
     const err = error.message
     res.status(500).json({ message: "Ha habido un error: " + err });
