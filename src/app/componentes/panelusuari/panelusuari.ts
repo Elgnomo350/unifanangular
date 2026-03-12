@@ -108,8 +108,6 @@ export class Panelusuari implements OnInit{
     this.usuariDades.modificarCorreo(correu).subscribe({
       next: (res) => {
         alert(res.mensaje)
-        this.usuariDades.limpiarUser()
-        this.router.navigate(["/registre"])
       },
       error: (err) => {
         alert("Error: " + err.error.message)

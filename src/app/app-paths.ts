@@ -1,3 +1,4 @@
+
 export const AppPaths: Record<string, string> = {
   index: '',
   catalogo: 'catalogo',
@@ -8,5 +9,6 @@ export const AppPaths: Record<string, string> = {
   panel: 'panelusuari',
   recuperarpasswd: 'recuperarpasswd',
   fernovapasswd: 'fernovapasswd',
-  confirmarusuari: 'confirmarusuari'
+  confirmarusuari: 'confirmarusuari',
+  confirmarcambiocorreo: 'confirmarcambiocorreo'
 } as const;
