@@ -82,14 +82,15 @@ body {
 
 .destacados-footer {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 4%;
+    justify-content: center;
+    gap: 0.6rem;
 }
 
 .precio {
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1.2rem;    
+    white-space: nowrap;
 }
 
 .destacados-footer button {

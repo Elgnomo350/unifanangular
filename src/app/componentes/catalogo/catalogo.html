@@ -12,174 +12,86 @@
     <main class="productos">
         <section class="categoria anime">
             <h3>Categoria Anime</h3>
-            <article class="producte">
-            <img [src]="cgetpath('img/catalogo/senku_funko.jpg')" alt="Anime">
-            <div class="info">
-                <h3 id="nombresenku">Figura de Senku</h3>
-                <p>Compra nuestra figura del cientifico mas joven i viejo, viniendo
-                    directamente del mundo de piedra! Que malote!</p>
-                <div class="destacados-footer">
-                    <span class="precio" id="preciosenku">39.99€</span>
-                    <button (click)="afegirCistella('img/catalogo/senku_funko.jpg', 'nombresenku', 'senku_funko', 'preciosenku')">Comprar</button>
-                </div>
-                <div class="destacados-footer">
-                    <button (click)="restar('senku_funko')">-</button>
-                    <h3 id="senku_funko" #senku_funko>0</h3>
-                    <button (click)="sumar('senku_funko')">+</button>
-                </div>
-            </div>
-        </article>
 
-        <article class="producte">
-            <img [src]="cgetpath('img/catalogo/feitan_figura.jpg')" alt="Anime">
-            <div class="info">
-                <h3 id="nombrefeitan">HxH Feitan figura PVC</h3>
-                <p>Feitan Figura Japón Oficial Hecha de PVC hombre con paraguas
-                perfecto para regalar.</p>
-                <div class="destacados-footer">
-                    <span class="precio" id="preciofeitan">49.99€</span>
-                    <button (click)="afegirCistella('img/catalogo/feitan_figura.jpg', 'nombrefeitan', 'feitan_figura', 'preciofeitan')">Comprar</button>
-                </div>
+            @for(producto of getIndexProductos(); track $index){
+                <article class="producte">
+                    <img [src]="cgetpath(getProducto($index, 'anime').foto)" alt="Anime">
+                    <div class="info">
+                        <h3 id="nombre{{getProducto($index, 'anime').nombre}}">{{getProducto($index, "anime").nombre}}</h3>
+                        <p>{{getProducto($index, "anime").descripcion}}</p><br>
+                        <div class="destacados-footer">
+                            <span class="precio" id="precio{{getProducto($index, 'anime').nombre}}">{{getProducto($index, "anime").precio}}€</span>
+                            
+                            <button (click)="afegirCistella(getProducto($index, 'anime').foto, 
+                            'nombre' + getProducto($index, 'anime').nombre, 
+                            getProducto($index, 'anime').nombre + '_funko', 
+                            'precio' + getProducto($index, 'anime').nombre)">Comprar</button>
 
-                <div class="destacados-footer">
-                    <button (click)="restar('feitan_figura')">-</button>
-                    <h3 id="feitan_figura">0</h3>
-                    <button (click)="sumar('feitan_figura')">+</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="producte">
-            <img [src]="cgetpath('img/catalogo/sunny_barco.jpg')" alt="Anime">
-            <div class="info">
-                <h3 id="nombrebarcosunny">Barco Thousand sunny</h3>
-                <p>El adorno presenta un diseño
-                    innovador de crucero que nunca se hunde, viniendo directamente de One piece! </p>
-                <div class="destacados-footer">
-                    <span class="precio" id="sunny_barco_precio">22.99€</span>
-                    <button (click)="afegirCistella('img/catalogo/sunny_barco.jpg', 'nombrebarcosunny', 'sunny_barco', 'sunny_barco_precio')">Comprar</button>
-                </div> 
-                <div class="destacados-footer">
-                    <button (click)="restar('sunny_barco')">-</button>
-                    <h3 id="sunny_barco">0</h3>
-                    <button (click)="sumar('sunny_barco')">+</button>
-                </div>
-            </div>
-        </article>
+                        </div><br>
+                        <div class="destacados-footer">
+                            <button (click)="restar(getProducto($index, 'anime').nombre + '_funko')">-</button>
+                            <h3 id="{{getProducto($index, 'anime').nombre}}_funko">0</h3>
+                            <button (click)="sumar(getProducto($index, 'anime').nombre + '_funko')">+</button>
+                        </div>
+                    </div>
+            </article>
+        }
         </section>
 
         <section class="categoria videojocs">
             <h3>Categoria Videojocs</h3>
-            <article class="producte">
-            <img [src]="cgetpath('img/catalogo/hornet_llavero.png')" alt="Anime">
-            <div class="info">
-                <h3 id="nombrehornet">Llavero de hornet</h3>
-                <p>Shao! Una medioinsecto que tiene una extraña obsesion
-                    con la savia, y encima cabe en tu bolsillo! </p>
-                <div class="destacados-footer">
-                    <span class="precio" id="hornetprecio">10€</span>
-                    <button (click)="afegirCistella('img/catalogo/hornet_llavero.png', 'nombrehornet', 'hornet_llavero', 'hornetprecio')">Comprar</button>
-                </div>
-                <div class="destacados-footer">
-                    <button (click)="restar('hornet_llavero')">-</button>
-                    <h3 id="hornet_llavero">0</h3>
-                    <button (click)="sumar('hornet_llavero')">+</button>
-                </div>
-            </div>
-        </article>
 
+            @for(producto of getIndexProductos(); track $index){
+                <article class="producte">
+                    <img [src]="cgetpath(getProducto($index, 'videojocs').foto)" alt="videojocs">
+                    <div class="info">
+                        <h3 id="nombre{{getProducto($index, 'videojocs').nombre}}">{{getProducto($index, "videojocs").nombre}}</h3>
+                        <p>{{getProducto($index, "videojocs").descripcion}}</p><br>
+                        <div class="destacados-footer">
+                            <span class="precio" id="precio{{getProducto($index, 'videojocs').nombre}}">{{getProducto($index, "videojocs").precio}}€</span>
+                            
+                            <button (click)="afegirCistella(getProducto($index, 'videojocs').foto, 
+                            'nombre' + getProducto($index, 'videojocs').nombre, 
+                            getProducto($index, 'videojocs').nombre + '_funko', 
+                            'precio' + getProducto($index, 'videojocs').nombre)">Comprar</button>
 
-        <article class="producte">
-            <img [src]="cgetpath('img/catalogo/susie_idea.png')" alt="Anime">
-            <div class="info">
-                <h3 id="nombresusieidea">Figura de pixel Susie</h3>
-                <p>Una autentica heroina en el mundo de Tenna!</p><br>
-                <div class="destacados-footer">
-                    <span class="precio" id="preciosusieidea">29.99€</span>
-                    <button (click)="afegirCistella('img/catalogo/susie_idea.png', 'nombresusieidea', 'susie_idea', 'preciosusieidea')">Comprar</button>
-                </div>
-                <div class="destacados-footer">
-                    <button (click)="restar('susie_idea')">-</button>
-                    <h3 id="susie_idea">0</h3>
-                    <button (click)="sumar('susie_idea')">+</button>
-                </div>
-            </div>
-        </article>
-
-        <article class="producte">
-            <img [src]="cgetpath('img/catalogo/ajolote.jpg')" alt="Anime">
-            <div class="info">
-                <h3  id="nombreajolote">Minecraft: Ajolote del 10</h3>
-                <p>Un ajolote muy lindo, te acompañara hasta en tus sueños! (Yo si fuera un profe le pondria un 10)</p>
-                <div class="destacados-footer">
-                    <span class="precio" id="precioajolote">34.99€</span>
-                    <button (click)="afegirCistella('img/catalogo/ajolote.webp', 'nombreajolote', 'ajolote', 'precioajolote')">Comprar</button>
-                </div>
-
-                <div class="destacados-footer">
-                    <button (click)="restar('ajolote')">-</button>
-                    <h3 id="ajolote">0</h3>
-                    <button (click)="sumar('ajolote')">+</button>
-                </div>                
-            </div>
-        </article>
+                        </div><br>
+                        <div class="destacados-footer">
+                            <button (click)="restar(getProducto($index, 'videojocs').nombre + '_funko')">-</button>
+                            <h3 id="{{getProducto($index, 'videojocs').nombre}}_funko">0</h3>
+                            <button (click)="sumar(getProducto($index, 'videojocs').nombre + '_funko')">+</button>
+                        </div>
+                    </div>
+            </article>
+        }
         </section>
         
         <section class="categoria random">
-            <h3>Randoms</h3>
-            <article class="producte">
-            <img [src]="cgetpath('img/catalogo/dizfraz_malboro.jpg')" alt="Anime">
-            <div class="info">
-                <h3 id="nombrecigarro">Dizfraz cigarro hombre</h3>
-                <p>Este divertido disfraz de paquete de cigarrillos para hombre incluye
-                    una túnica y una banda.</p>
-                <div class="destacados-footer">
-                    <span class="precio" id="preciocigarro">22.14€</span>
-                    <button (click)="afegirCistella('img/catalogo/dizfraz_malboro.jpg', 'nombrecigarro', 'cigarro', 'preciocigarro')">Comprar</button>
-                </div>
 
-                <div class="destacados-footer">
-                    <button (click)="restar('cigarro')">-</button>
-                    <h3 id="cigarro">0</h3>
-                    <button (click)="sumar('cigarro')">+</button>
-                </div>                
-            </div>
-        </article>
+            <h3>Categoria Random</h3>
+            @for(producto of getIndexProductos(); track $index){
+                <article class="producte">
+                    <img [src]="cgetpath(getProducto($index, 'random').foto)" alt="random">
+                    <div class="info">
+                        <h3 id="nombre{{getProducto($index, 'random').nombre}}">{{getProducto($index, "random").nombre}}</h3>
+                        <p>{{getProducto($index, "random").descripcion}}</p><br>
+                        <div class="destacados-footer">
+                            <span class="precio" id="precio{{getProducto($index, 'random').nombre}}">{{getProducto($index, "random").precio}}€</span>
+                            
+                            <button (click)="afegirCistella(getProducto($index, 'random').foto, 
+                            'nombre' + getProducto($index, 'random').nombre, 
+                            getProducto($index, 'random').nombre + '_funko', 
+                            'precio' + getProducto($index, 'random').nombre)">Comprar</button>
 
-        <article class="producte">
-            <img [src]="cgetpath('img/catalogo/sandia.jpg')" alt="Anime">
-            <div class="info">
-                <h3 id="nombresandia">Colgante de la sandia loca</h3>
-                <p>Enloquecete teniendo este llavero, llevatelo a todos lados y vive cada dia como si fuera el ultimo!</p>
-                <div class="destacados-footer">
-                    <span class="precio" id="preciosandia">25.40€</span>
-                    <button (click)="afegirCistella('img/catalogo/LlaveroSandia.avif', 'nombresandia', 'sandia', 'preciosandia')">Comprar</button>
-                </div>
-                <div class="destacados-footer">
-                    <button (click)="restar('sandia')">-</button>
-                    <h3 id="sandia">0</h3>
-                    <button (click)="sumar('sandia')">+</button>
-                </div>                
-            </div>
-        </article>
-
-        <article class="producte">
-            <img [src]="cgetpath('img/catalogo/oro.jpg')" alt="Anime">
-            <div class="info">
-                <h3 id="nombreoro">1 kilo de oro a precio del mercado</h3>
-                <p>La primera tienda de merchandising mundial que permite la compra de oro!</p>
-                <div class="destacados-footer">
-                    <span class="precio" id="precio_oro">130 000€</span>
-                    <button (click)="afegirCistella('img/catalogo/Oro.jpg', 'nombreoro', 'oro', 'precio_oro')">Comprar</button>
-                </div>
-
-                <div class="destacados-footer">
-                    <button (click)="restar('oro')">-</button>
-                    <h3 id="oro">0</h3>
-                    <button (click)="sumar('oro')">+</button>
-                </div>                
-            </div>
-        </article>
+                        </div><br>
+                        <div class="destacados-footer">
+                            <button (click)="restar(getProducto($index, 'random').nombre + '_funko')">-</button>
+                            <h3 id="{{getProducto($index, 'random').nombre}}_funko">0</h3>
+                            <button (click)="sumar(getProducto($index, 'random').nombre + '_funko')">+</button>
+                        </div>
+                    </div>
+            </article>
+        }
         </section>
     </main>
 </main>

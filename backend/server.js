@@ -10,7 +10,7 @@ const crypto = require("node:crypto");
 require('dotenv').config();
 const nodemailer = require("nodemailer")
 const google = require("googleapis")
-const sequelize = require("sequelize")
+const {configBBDD} = require("./db.config")
 const initModels = require("./models/init-models");
 
 admin.initializeApp({
@@ -25,17 +25,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-const dbr = new sequelize.Sequelize(process.env.DATABASE_URI, {
-  dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  },
-  logging: false
-});
-
+const dbr = configBBDD()
 const models = initModels(dbr)
 
 app.listen(23000, () => console.log(`listening on http://localhost:${23000}`));
@@ -702,6 +692,33 @@ app.post("/actualitzarpasswd", async (req, res) => {
     res.status(500).json({ message: "Ha habido un error: " + err });
     return;
   }
+
+})
+
+
+app.get("/demanarproductes", async (req, res) => {
+
+  try {
+
+    const productos = await models.Products.findAll({raw: true});
+    const productosAgrupados = productos.reduce((acc, prod) => {
+    const key = prod.categoria;
+
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+
+      acc[key].push(prod);
+      return acc;
+    }, {});
+
+    res.status(200).send({productos: productosAgrupados})
+
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }  
 
 })
 
