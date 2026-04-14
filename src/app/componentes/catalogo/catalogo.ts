@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Getasset } from '../../serveis/getasset/getasset';
 import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
 import { Router } from '@angular/router';
+import { Bbddsql, Producte } from '../../serveis/bbddsql/bbddsql';
 
 @Component({
   selector: 'app-catalogo',
@@ -9,10 +10,41 @@ import { Router } from '@angular/router';
   templateUrl: './catalogo.html',
   styleUrl: './catalogo.css',
 })
-export class Catalogo {
+export class Catalogo implements OnInit{
+    private productos: Record<string, Producte[]>  = {}
+
     constructor(private getasset: Getasset, private manejarcistella: Manejarcistella, private router: Router, 
-    ){}
-  
+    private bbddsql: Bbddsql, private cdr: ChangeDetectorRef){}
+    
+    ngOnInit(): void {
+      this.demanarProductos()
+    }
+
+    public demanarProductos(){
+      this.bbddsql.demanarProductes().subscribe({
+      next: (res) => {
+       this.bbddsql.setProductes(res.productos)
+       this.productos = res.productos
+       this.cdr.detectChanges()
+      },
+      error: (err) => {
+        console.log("Error: " + err.error.message)
+      }
+    })
+    }
+
+    public getProductos(){
+      return this.productos;
+    }
+
+    public getIndexProductos(){
+      return Object.keys(this.productos)
+    }
+
+    public getProducto(index: number, categoria: string){
+      return this.productos[categoria][index]
+    }
+
     public cgetpath(path: string){
       return this.getasset.getpath(path);
     }
@@ -55,18 +87,18 @@ export class Catalogo {
     }
 
   filtrar(tipo: string) {
-  const categorias = document.querySelectorAll('.categoria');
+      const categorias = document.querySelectorAll('.categoria');
 
-  categorias.forEach((categoria: any) => {
-    if (tipo === 'todo') {
-      categoria.style.display = 'flex';
-    } else if (categoria.classList.contains(tipo)) {
-      categoria.style.display = 'flex';
-    } else {
-      categoria.style.display = 'none';
-    }
-  }); 
-}
+      categorias.forEach((categoria: any) => {
+        if (tipo === 'todo') {
+          categoria.style.display = 'flex';
+        } else if (categoria.classList.contains(tipo)) {
+          categoria.style.display = 'flex';
+        } else {
+          categoria.style.display = 'none';
+        }
+      }); 
+  }
 
 }
 
