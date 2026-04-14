@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "dev": "nodemon ./backend/server.js"
+    "dev": "nodemon ./backend/server.js",
+    "genmodels": "node ./backend/seqauto.js"
   },
   "prettier": {
     "printWidth": 100,
@@ -38,8 +39,13 @@
     "googleapis": "^171.4.0",
     "jsonwebtoken": "^9.0.3",
     "jwt-decode": "^4.0.0",
+    "mysql2": "^3.21.1",
     "nodemailer": "^8.0.1",
+    "pg": "^8.20.0",
+    "pg-hstore": "^2.3.4",
     "rxjs": "~7.8.0",
+    "sequelize": "^6.37.8",
+    "sequelize-auto": "^0.8.8",
     "tslib": "^2.3.0",
     "zod": "^4.3.6"
   },

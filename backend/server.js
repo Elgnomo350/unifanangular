@@ -10,6 +10,8 @@ const crypto = require("node:crypto");
 require('dotenv').config();
 const nodemailer = require("nodemailer")
 const google = require("googleapis")
+const sequelize = require("sequelize")
+const initModels = require("./models/init-models");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -22,6 +24,19 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+
+const dbr = new sequelize.Sequelize(process.env.DATABASE_URI, {
+  dialect: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  },
+  logging: false
+});
+
+const models = initModels(dbr)
 
 app.listen(23000, () => console.log(`listening on http://localhost:${23000}`));
 
@@ -79,7 +94,7 @@ const oAuth2Client = new google.Auth.OAuth2Client(
   process.env.CLIENTID,
   process.env.CLIENTSECRET,
   "https://developers.google.com/oauthplayground",
-); 
+);
 
 oAuth2Client.setCredentials({
   refresh_token: process.env.REFRESHTOKEN
