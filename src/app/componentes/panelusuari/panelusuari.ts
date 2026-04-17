@@ -128,4 +128,14 @@ export class Panelusuari implements OnInit{
     })
   }
 
+  public isAdmin(){
+    return this.usuariDades.isAdmin()
+  }
+
+  public linkAdmin(){
+    if (this.isAdmin()) {
+      this.router.navigate(["/adminpanel"])
+    }
+  }
+
 }

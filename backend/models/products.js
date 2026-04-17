@@ -26,6 +26,11 @@ module.exports = function(sequelize, DataTypes) {
     categoria: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+    oferta: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   }, {
     sequelize,

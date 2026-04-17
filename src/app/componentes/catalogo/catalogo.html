@@ -22,7 +22,7 @@
                         <div class="destacados-footer">
                             <span class="precio" id="precio{{getProducto($index, 'anime').nombre}}">{{getProducto($index, "anime").precio}}€</span>
                             
-                            <button (click)="afegirCistella(getProducto($index, 'anime').foto, 
+                            <button (click)="afegirCistella(getProducto($index, 'anime').id, getProducto($index, 'anime').foto, 
                             'nombre' + getProducto($index, 'anime').nombre, 
                             getProducto($index, 'anime').nombre + '_funko', 
                             'precio' + getProducto($index, 'anime').nombre)">Comprar</button>
@@ -50,7 +50,7 @@
                         <div class="destacados-footer">
                             <span class="precio" id="precio{{getProducto($index, 'videojocs').nombre}}">{{getProducto($index, "videojocs").precio}}€</span>
                             
-                            <button (click)="afegirCistella(getProducto($index, 'videojocs').foto, 
+                            <button (click)="afegirCistella(getProducto($index, 'videojocs').id, getProducto($index, 'videojocs').foto, 
                             'nombre' + getProducto($index, 'videojocs').nombre, 
                             getProducto($index, 'videojocs').nombre + '_funko', 
                             'precio' + getProducto($index, 'videojocs').nombre)">Comprar</button>
@@ -78,7 +78,7 @@
                         <div class="destacados-footer">
                             <span class="precio" id="precio{{getProducto($index, 'random').nombre}}">{{getProducto($index, "random").precio}}€</span>
                             
-                            <button (click)="afegirCistella(getProducto($index, 'random').foto, 
+                            <button (click)="afegirCistella(getProducto($index, 'random').id, getProducto($index, 'random').foto, 
                             'nombre' + getProducto($index, 'random').nombre, 
                             getProducto($index, 'random').nombre + '_funko', 
                             'precio' + getProducto($index, 'random').nombre)">Comprar</button>

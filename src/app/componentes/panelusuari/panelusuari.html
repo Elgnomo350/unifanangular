@@ -62,11 +62,13 @@
   <div class="user-actions">
     <button class="btn logout" (click)="cerrarSesion()">Cerrar sesión</button>
     <button class="btn delete" (click)="eliminarMiCuenta()">Eliminar mi cuenta</button>
+    <button class="btn sensitive" (click)="toggleEditar('infoSensibles')">
+      Modificar información sensible
+    </button>    
+    @if (isAdmin()) {<button class="btn admin" (click)="linkAdmin()">Panel de admin</button>}
   </div>
 
-<button class="btn" (click)="toggleEditar('infoSensibles')">
-    Modificar información sensible
-</button>
+
 
   @if(getPropietats()['infoSensibles']){
     <div class="sensitive-actions" style="margin-top: 10px;">
@@ -93,4 +95,5 @@
 
     </div>
   }
+
 </div>

@@ -17,7 +17,10 @@ export class Catalogo implements OnInit{
     private bbddsql: Bbddsql, private cdr: ChangeDetectorRef){}
     
     ngOnInit(): void {
-      this.demanarProductos()
+      this.productos = this.bbddsql.getProductes()
+      if (JSON.stringify(this.productos) === "{}") {
+          this.demanarProductos()
+      }
     }
 
     public demanarProductos(){
@@ -25,7 +28,7 @@ export class Catalogo implements OnInit{
       next: (res) => {
        this.bbddsql.setProductes(res.productos)
        this.productos = res.productos
-       this.cdr.detectChanges()
+       this.cdr.detectChanges()        
       },
       error: (err) => {
         console.log("Error: " + err.error.message)
@@ -61,7 +64,7 @@ export class Catalogo implements OnInit{
       elem.textContent = valor <= 0 ? "0" : valor.toString();
     }
 
-    public afegirCistella(foto: string, nom: string, idquantitatcomprada: string, preu: string){
+    public afegirCistella(id: number, foto: string, nom: string, idquantitatcomprada: string, preu: string){
       idquantitatcomprada = document.getElementById(idquantitatcomprada)!.textContent
 
       if ((idquantitatcomprada) == "0"){
@@ -83,7 +86,7 @@ export class Catalogo implements OnInit{
       let quantitatcomprada: number = parseInt(idquantitatcomprada)
       let preutotal: number = parseFloat(preu)
 
-      this.manejarcistella.afegircistella(foto, nom, quantitatcomprada, preutotal * quantitatcomprada, preutotal)
+      this.manejarcistella.afegircistella(id, foto, nom, quantitatcomprada, preutotal * quantitatcomprada, preutotal)
     }
 
   filtrar(tipo: string) {

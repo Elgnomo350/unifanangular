@@ -11,6 +11,7 @@ import { Recuperarpasswd } from './componentes/recuperarpasswd/recuperarpasswd';
 import { Fernovapasswd } from './componentes/fernovapasswd/fernovapasswd';
 import { Confirmarusuari } from './componentes/confirmarusuari/confirmarusuari';
 import { Confirmarcambiocorreo } from './componentes/confirmarcambiocorreo/confirmarcambiocorreo';
+import { Adminpanel } from './componentes/adminpanel/adminpanel';
 
 //Parte de la investigacion punto 4.1, rutas
 export const routes: Routes = [
@@ -25,5 +26,6 @@ export const routes: Routes = [
     {path: AppPaths['recuperarpasswd'], component: Recuperarpasswd},
     {path: AppPaths['fernovapasswd'], component: Fernovapasswd},
     {path: AppPaths['confirmarusuari'], component: Confirmarusuari},
-    {path: AppPaths['confirmarcambiocorreo'], component: Confirmarcambiocorreo}
+    {path: AppPaths['confirmarcambiocorreo'], component: Confirmarcambiocorreo},
+    {path: AppPaths['adminpanel'], component: Adminpanel}
 ];

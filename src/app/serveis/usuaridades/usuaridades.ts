@@ -89,6 +89,10 @@ public confirmarcambiocorreo(token: string){
   return this.httpclient.patch<{mensaje: string}>("http://localhost:23000/fermodificaciocorreu", {token: token})
 }
 
+public isAdminBackend(){
+  return this.httpclient.get<{historial: HistorialCompra[]}>("http://localhost:23000/adminpanel", {withCredentials: true})
+}
+
 public getDades(){
   return this.dades;
 }
@@ -117,10 +121,15 @@ public limpiarUser(){
           direccio: "",
           telefon: "",
           sessionID: "",
-          cesta: []
+          cesta: [],
+          role: "guest"
     })
     this.manejarCistella.gcistella = this.dades!.cesta
     this.setIniciatSessio(false);
+}
+
+public isAdmin(){
+  return this.dades?.role == "Admin"
 }
 
 }
@@ -133,6 +142,16 @@ export interface UsuariData {
   telefon: string;
   sessionID: string;
   cesta: CistellaInterface[]
+  role: string;
+}
+
+export interface HistorialCompra{
+  id: number;
+  user_email: string;
+  producto_id: number;
+  cantidad: number;
+  oferta: boolean;
+  fecha: Date;
 }
 
 
