@@ -8,8 +8,6 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const crypto = require("node:crypto");
 require('dotenv').config();
-const nodemailer = require("nodemailer")
-const google = require("googleapis")
 const {configBBDD} = require("./db.config")
 const initModels = require("./models/init-models");
 
@@ -27,6 +25,7 @@ app.use(cookieParser());
 
 const dbr = configBBDD()
 const models = initModels(dbr)
+
 
 app.listen(23000, () => console.log(`listening on http://localhost:${23000}`));
 
@@ -80,30 +79,24 @@ const usuarioSchema = z.object({
 
 const SECRET_KEY = process.env.SECRET_KEY; 
 
-const oAuth2Client = new google.Auth.OAuth2Client(
-  process.env.CLIENTID,
-  process.env.CLIENTSECRET,
-  "https://developers.google.com/oauthplayground",
-);
-
-oAuth2Client.setCredentials({
-  refresh_token: process.env.REFRESHTOKEN
-});
-
-async function getToken() {
-  return await oAuth2Client.getAccessToken();
+async function sendMail(to, subject, html) {
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": process.env.BREVO_API_KEY,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      sender: {
+        email: process.env.BREVO_SENDER,
+        name: "Unifan"
+      },
+      to: [{ email: to }],
+      subject: subject,
+      htmlContent: html
+    })
+  });
 }
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      type: "OAuth2",
-      user: "noreplyunifandam1@gmail.com",
-      clientId: process.env.CLIENTID,
-      clientSecret: process.env.CLIENTSECRET,
-      refreshToken: process.env.REFRESHTOKEN,
-      accessToken: getToken()
-    }
-});
 
 async function comprovacio(request){
   try {
@@ -185,18 +178,17 @@ app.post("/registrar", async (req, res) => {
         sessions: admin.firestore.FieldValue.arrayUnion(token),
     }, {merge: true})
 
-    await transporter.sendMail({
-    from: "Soporte unifan",
-    to: req.body.correu,
-    subject: "Confirmar email",
-    html: `
+    await sendMail(
+      req.body.correu,
+      "Confirmar email",
+      `
       <h2>Confirmar registro</h2>
       <p>Haz clic en el siguiente enlace para confirmar tu registro:</p>
       <a href="${confirmarLink}">${confirmarLink}</a>
       <p>Este enlace expirará en 30 minutos.</p>
       <p>No compartas esto a nadie.</p>
-    `
-    });
+      `
+    );
 
     res.status(201).json({ mensaje: "Un enlace de verificacion ha sido mandado a su correo" });
     return;
@@ -234,7 +226,8 @@ app.post("/ferregistre", async (req, res) => {
       passwd: passwd,
       direccio: direccio,
       telefon: telefon,
-      cesta: cesta
+      cesta: cesta,
+      role: "usuario"
   });
 
   res.status(201).json({ mensaje: "Usuario " + correu + " registrado" });
@@ -271,7 +264,7 @@ app.post("/iniciarsessio", async (req, res) => {
 
     if(passwd === userData.passwd){    
 
-    const { nom, cognom, correu, passwd, direccio, telefon, cesta } = userData;
+    const { nom, cognom, correu, passwd, direccio, telefon, cesta, role } = userData;
     
     
     const sessionID = crypto.randomBytes(4).readUInt32BE(0).toString()
@@ -287,7 +280,8 @@ app.post("/iniciarsessio", async (req, res) => {
       direccio: direccio,
       telefon: telefon,
       sessionID: sessionID,
-      cesta: cesta
+      cesta: cesta,
+      role: role
     }
     
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "7d" });
@@ -439,7 +433,7 @@ app.patch("/modificarcampo", async (req, res) => {
 
   const novesdades = (await user.get()).data()
 
-  const { nom, cognom, correu, passwd, direccio, telefon } = novesdades;
+  const { nom, cognom, correu, passwd, direccio, telefon, cesta, role } = novesdades;
 
   const payload = {
     nom: nom,
@@ -447,7 +441,9 @@ app.patch("/modificarcampo", async (req, res) => {
     correu: correu,
     direccio: direccio,
     telefon: telefon,
-    sessionID: dades.sessionID
+    sessionID: dades.sessionID,
+    cesta: cesta,
+    role: role
   }
 
   const newtoken = jwt.sign(payload, SECRET_KEY);
@@ -506,18 +502,15 @@ app.post("/modificarcorreu", async (req, res) => {
         sessions: admin.firestore.FieldValue.arrayUnion(token),
     }, {merge: true})
 
-    await transporter.sendMail({
-    from: "Soporte unifan",
-    to: req.body.noucorreu,
-    subject: "Confirmar cambio de email",
-    html: `
-      <h2>Confirmar registro</h2>
-      <p>Haz clic en el siguiente enlace para confirmar el cambio de email:</p>
+    await sendMail(
+      req.body.correu,
+      "Confirmar email",
+      `
+      <h2>Confirmar cambio de email</h2>
+      <p>Haz clic en el siguiente enlace:</p>
       <a href="${confirmarLink}">${confirmarLink}</a>
-      <p>Este enlace expirará en 30 minutos.</p>
-      <p>No compartas esto a nadie.</p>
-    `
-    });
+      `
+    );
 
     res.status(201).json({ mensaje: "Un enlace de verificacion ha sido mandado a su correo" });
     return;
@@ -629,18 +622,17 @@ app.post("/mandarlinkolvidarpasswd", async (req, res) => {
   await db.collection("unifan").doc("temporaltokens").set({sessions: admin.firestore.FieldValue.arrayUnion(temporalToken)}, 
   {merge: true})
 
-  await transporter.sendMail({
-  from: "Soporte unifan",
-  to: req.body.correu,
-  subject: "Cambio de contraseña",
-  html: `
-    <h2>Cambiar contraseña</h2>
-    <p>Haz clic en el siguiente enlace para cambiar tu contraseña:</p>
-    <a href="${resetLink}">${resetLink}</a>
-    <p>Este enlace expirará en 30 minutos.</p>
-    <p>No compartas esto a nadie.</p>
-  `
-  });
+  await sendMail(
+      req.body.correu,
+      "Cambio de contraseña",
+      `
+      <h2>Cambiar contraseña</h2>
+      <p>Haz clic en el siguiente enlace para cambiar tu contraseña:</p>
+      <a href="${resetLink}">${resetLink}</a>
+      <p>Este enlace expirará en 30 minutos.</p>
+      <p>No compartas esto a nadie.</p>
+      `
+  );
 
   res.status(200).send({mensaje: "Se ha enviado un enlace a tu correo"})
 
@@ -722,4 +714,80 @@ app.get("/demanarproductes", async (req, res) => {
 
 })
 
+const registrarCompraSchema = z.object({
+  producto_id: z.coerce.number().int().positive(),
+  cantidad: z.coerce.number().int().positive(),
+});
 
+app.post("/registrarcompra", async (req, res) => {
+  try {
+
+    const result = registrarCompraSchema.safeParse(req.body);
+    if (!result.success) {
+      const errorTree = z.treeifyError(result.error);
+      const error = Object.keys(errorTree.properties)[0]
+
+      res.status(400).json({message: "Error: " + errorTree.properties[error].errors[0]});
+      return;
+    }
+
+    const { producto_id, cantidad } = result.data;
+
+    const comprovar = await comprovacio(req)
+
+    if(comprovar.code !== 200){
+      return res.status(comprovar.code).json({message: comprovar.message})
+    }
+
+    const product = await models.Products.findByPk(producto_id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Producto no encontrado"
+      });
+    }
+
+    await models.HistorialProductes.create({
+      user_email: comprovar.dades.correu,
+      producto_id: producto_id,
+      cantidad: cantidad,
+      oferta: product.oferta
+    });
+
+    res.status(200).send({
+      mensaje: "Gracias por tu compra!"
+    })
+
+    return
+
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+})
+
+
+app.get("/adminpanel", async (req, res) => {
+  try {
+    const comprovar = await comprovacio(req)
+
+    if(comprovar.code !== 200){
+      return res.status(comprovar.code).json({message: comprovar.message})
+    }
+    
+    if((await comprovar.user.get()).data().role != "Admin"){
+      res.status(403).send({
+        message: "No eres admin, no tienes permiso para entrar aqui"
+      })
+    }
+
+    const historial = await models.HistorialProductes.findAll();
+
+    res.status(200).send({historial: historial})
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+})

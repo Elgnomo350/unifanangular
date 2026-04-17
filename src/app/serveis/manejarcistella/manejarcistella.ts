@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Bbddsql } from '../bbddsql/bbddsql';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Manejarcistella {
 
-  constructor() {}
+  constructor(private bbddsql: Bbddsql) {}
 
   private cistellaarray: CistellaInterface[] = [];
 
@@ -18,6 +19,7 @@ export class Manejarcistella {
   }
 
   public afegircistella(
+    id: number,
     foto: string,
     nom: string,
     quantitatcomprada: number,
@@ -37,12 +39,24 @@ export class Manejarcistella {
     if (volver) return;
 
     this.cistellaarray.push({
+      id: id,
       foto: foto,
       nom: nom,
       quantitatcomprada: quantitatcomprada,
       preutotal: preutotal,
       preuperunitat: preuperunitat
     });
+  }
+
+  public comprarCistella(producto_id: number, cantidad: number){
+    this.bbddsql.registrarCompra(producto_id, cantidad).subscribe({
+      next: (res) => {
+        alert(res.mensaje)
+      },
+      error: (err) => {
+        alert("Ha ocurrido un error: " + err.error.message)
+      }
+    })
   }
 
   public buidarcistella() {
@@ -60,6 +74,7 @@ export class Manejarcistella {
 }
 
 export interface CistellaInterface {
+  id: number;
   foto: string;
   nom: string;
   quantitatcomprada: number;

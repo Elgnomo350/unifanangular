@@ -18,7 +18,7 @@ export class Cistella implements OnInit{
     private getroute: Getroute,
     private manejarcistella: Manejarcistella,
     private router: Router,
-    private usuaridades: Usuaridades
+    private usuaridades: Usuaridades,
   ) {
   }
 
@@ -53,6 +53,10 @@ export class Cistella implements OnInit{
   }
 
   public buidarcistella() {
+    
+    for (const item of this.getcistella()) {
+      this.manejarcistella.comprarCistella(item.id, item.quantitatcomprada);
+    }
     this.manejarcistella.buidarcistella();
   }
 

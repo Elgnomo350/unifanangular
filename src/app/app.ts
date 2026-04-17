@@ -3,6 +3,7 @@ import { Header } from './componentes/header/header';
 import { RouterOutlet } from '@angular/router';
 import { Footer } from './componentes/footer/footer';
 import { Usuaridades } from './serveis/usuaridades/usuaridades';
+import { Bbddsql } from './serveis/bbddsql/bbddsql';
 
 
 @Component({
@@ -13,9 +14,10 @@ import { Usuaridades } from './serveis/usuaridades/usuaridades';
 })
 export class App implements OnInit{
   protected readonly title = signal('unifanangular');
-  constructor(private usuariDades: Usuaridades, private cgr: ChangeDetectorRef){}
+  constructor(private usuariDades: Usuaridades, private bbddsql: Bbddsql){}
   
   ngOnInit(): void {
     this.usuariDades.checkSessio()
+    this.bbddsql.demanarProductesResponse()
   }
 }
