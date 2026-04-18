@@ -1,0 +1,119 @@
+.no-admin-page {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #2c3e50, #1a1a1a);
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+}
+
+.card h1 {
+  margin-bottom: 10px;
+  color: #e74c3c;
+  font-size: 28px;
+}
+
+.card p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.btn {
+  background-color: #2c3e50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background-color: #1a252f;
+}
+
+.historial-list {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  margin-top: 7em;
+}
+
+.historial-list h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.historial-item {
+  background: #2f3640;
+  color: white;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.historial-item ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.historial-item li {
+  margin: 5px 0;
+}
+
+.charts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2em;
+}
+
+.charts-title {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.charts-grid {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.chart-card {
+  background: #2f3640;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+
+  width: 400px;
+  height: 300px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-card h3 {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.chart-card canvas {
+  width: 100%;
+  height: auto;
+}

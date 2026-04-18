@@ -1,0 +1,17 @@
+{
+  "tfjsVersion": "1.7.4",
+  "tmVersion": "2.4.12",
+  "packageVersion": "0.8.4-alpha2",
+  "packageName": "@teachablemachine/image",
+  "timeStamp": "2026-04-18T14:28:52.617Z",
+  "userMetadata": {
+
+  },
+  "modelName": "tm-my-image-model",
+  "labels": [
+    "Dedo medio",
+    "Dedo medio 2",
+    "Nada"
+  ],
+  "imageSize": 224
+}

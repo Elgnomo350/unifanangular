@@ -1,0 +1,51 @@
+@if (isAdmin()) {
+
+<div class="historial-list">
+
+  <h2>Historial de productos</h2>
+
+  @for (item of getHistorial(); track item.id) {
+    <div class="historial-item">
+      <ul>
+        <li><strong>ID:</strong> {{ item.id }}</li>
+        <li><strong>Email:</strong> {{ item.user_email }}</li>
+        <li><strong>Producto ID:</strong> {{ item.producto_id }}</li>
+        <li><strong>Cantidad:</strong> {{ item.cantidad }}</li>
+        <li><strong>Oferta:</strong> {{ item.oferta ? 'Sí' : 'No' }}</li>
+        <li><strong>Fecha:</strong> {{ item.fecha | date:'short' }}</li>
+        <li><strong>Id de compra:</strong> {{ item.id_compra }}</li>
+      </ul>
+    </div>
+  }
+
+</div>
+
+<div class="charts-container">
+
+  <h2 class="charts-title">Graficos del historial de productos</h2>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Ventas por producto</h3>
+      <canvas id="chartProductos"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3>Ofertas vs No ofertas</h3>
+      <canvas id="chartOfertas"></canvas>
+    </div>
+  </div>
+
+</div>
+}
+@else {
+  <div class="no-admin-page">
+    <div class="card">
+      <h1>Acceso denegado</h1>
+      <p>No tienes permisos de administrador para acceder a esta sección.</p>
+      <button onclick="history.back()" class="btn">
+        Volver atrás
+      </button>
+    </div>
+  </div>
+}
