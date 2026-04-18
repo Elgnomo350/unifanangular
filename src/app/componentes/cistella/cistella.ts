@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Getroute } from '../../serveis/getroute/getroute';
 import { Router, RouterLink } from "@angular/router";
 import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
@@ -19,6 +19,7 @@ export class Cistella implements OnInit{
     private manejarcistella: Manejarcistella,
     private router: Router,
     private usuaridades: Usuaridades,
+    private cdr: ChangeDetectorRef
   ) {
   }
 
@@ -52,12 +53,17 @@ export class Cistella implements OnInit{
     return Math.round(num * 100) / 100;
   }
 
-  public buidarcistella() {
-    
-    for (const item of this.getcistella()) {
-      this.manejarcistella.comprarCistella(item.id, item.quantitatcomprada);
-    }
-    this.manejarcistella.buidarcistella();
+  public comprar() {
+    this.manejarcistella.comprarCistella().subscribe({
+      next: (res) => {
+        alert(res.mensaje)
+        this.manejarcistella.buidarcistella();
+        this.cdr.detectChanges()
+      },
+      error: (err) => {
+        alert("Ha ocurrido un error: " + err.error.message)
+      }
+    })
   }
 
   public borrarelement(index: number) {
