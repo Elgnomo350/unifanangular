@@ -152,6 +152,7 @@ export interface HistorialCompra{
   cantidad: number;
   oferta: boolean;
   fecha: Date;
+  id_compra: string;
 }
 
 

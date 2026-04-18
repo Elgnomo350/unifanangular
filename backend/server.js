@@ -11,6 +11,7 @@ require('dotenv').config();
 const {configBBDD} = require("./db.config")
 const initModels = require("./models/init-models");
 
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
@@ -714,15 +715,21 @@ app.get("/demanarproductes", async (req, res) => {
 
 })
 
-const registrarCompraSchema = z.object({
-  producto_id: z.coerce.number().int().positive(),
-  cantidad: z.coerce.number().int().positive(),
+const productoCestaSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  foto: z.string(),
+  nom: z.string(),
+  quantitatcomprada: z.coerce.number().int().positive(),
+  preutotal: z.coerce.number().positive(),
+  preuperunitat: z.coerce.number().positive()
 });
+
+const registrarCompraSchema = z.array(productoCestaSchema);
 
 app.post("/registrarcompra", async (req, res) => {
   try {
 
-    const result = registrarCompraSchema.safeParse(req.body);
+    const result = registrarCompraSchema.safeParse(req.body.productos);
     if (!result.success) {
       const errorTree = z.treeifyError(result.error);
       const error = Object.keys(errorTree.properties)[0]
@@ -731,7 +738,7 @@ app.post("/registrarcompra", async (req, res) => {
       return;
     }
 
-    const { producto_id, cantidad } = result.data;
+    const cesta = result.data;
 
     const comprovar = await comprovacio(req)
 
@@ -739,20 +746,29 @@ app.post("/registrarcompra", async (req, res) => {
       return res.status(comprovar.code).json({message: comprovar.message})
     }
 
-    const product = await models.Products.findByPk(producto_id);
+    const idCompra = crypto.randomUUID()
 
-    if (!product) {
-      return res.status(404).json({
-        message: "Producto no encontrado"
-      });
-    }
+    await Promise.all(
+      cesta.map(async (producto) => {
 
-    await models.HistorialProductes.create({
-      user_email: comprovar.dades.correu,
-      producto_id: producto_id,
-      cantidad: cantidad,
-      oferta: product.oferta
-    });
+        const product = await models.Products.findByPk(producto.id);
+
+          if (!product) {
+            return res.status(404).json({
+              message: "Producto no encontrado"
+            });
+          }
+
+          models.HistorialProductes.create({
+            user_email: comprovar.dades.correu,
+            producto_id: producto.id,
+            cantidad: producto.quantitatcomprada,
+            oferta: product.oferta,
+            id_compra: idCompra
+          })}
+        )
+    )
+    
 
     res.status(200).send({
       mensaje: "Gracias por tu compra!"

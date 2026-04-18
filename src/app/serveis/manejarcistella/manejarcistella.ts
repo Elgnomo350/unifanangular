@@ -48,15 +48,8 @@ export class Manejarcistella {
     });
   }
 
-  public comprarCistella(producto_id: number, cantidad: number){
-    this.bbddsql.registrarCompra(producto_id, cantidad).subscribe({
-      next: (res) => {
-        alert(res.mensaje)
-      },
-      error: (err) => {
-        alert("Ha ocurrido un error: " + err.error.message)
-      }
-    })
+  public comprarCistella(){
+    return this.bbddsql.registrarCompra(this.cistellaarray)
   }
 
   public buidarcistella() {
