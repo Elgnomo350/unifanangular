@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Usuaridades, UsuariData } from './usuaridades';
 import { Manejarcistella } from '../manejarcistella/manejarcistella';
+import { string } from '@tensorflow/tfjs';
 
 // JWT mínim parsejable: jwtDecode no valida signatura, només llegeix el payload base64url.
 // Els imports ESM són immutables al bundler d'Angular/esbuild, per tant NO es pot
@@ -24,6 +25,7 @@ describe("Usuaridades - Cas d'ús: Registre d'usuari", () => {
     telefon: '612345678',
     sessionID: 'abc123',
     cesta: [],
+    role: 'usuario'
   };
 
   const mockJwt = makeJwt(mockUsuariData);

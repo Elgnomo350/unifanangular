@@ -27,6 +27,7 @@ describe("Registre - Cas d'ús: Registre d'usuari", () => {
     telefon: '612345678',
     sessionID: 'abc123',
     cesta: [],
+    role: 'usuario'
   };
 
   const mockJwt = makeJwt(mockUsuariData);
