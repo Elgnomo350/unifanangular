@@ -16,24 +16,25 @@ export class Header implements OnInit{
   constructor(private getasset: Getasset, private getroute: Getroute, 
     private manejarCistella: Manejarcistella, private router: Router, private usuaridades: Usuaridades,
     private cgr: ChangeDetectorRef){}  
+    private numCistella = 0
+    private iniciatSessio: boolean = false; 
 
   ngOnInit(): void {
       this.usuaridades.getIniciatSessio().subscribe(iniciat => {
       this.iniciatSessio = iniciat
       this.cgr.detectChanges()
     })
+
+  this.manejarCistella.numCistella$.subscribe(value => {
+    this.numCistella = value;
+    this.cgr.detectChanges();
+  });
   }
 
-  private iniciatSessio: boolean = false; 
-
-  public getNumProductes(){
-    let num = 0
-    for (let index = 0; index < this.manejarCistella.gcistella.length; index++) {
-      num += this.manejarCistella.gcistella[index].quantitatcomprada
-    }
-    return num
+  public getNumCis(){
+    return this.numCistella
   }
-  
+
   public tancarSessio() {
     this.usuaridades.cerrarSesion(this.manejarCistella.gcistella).subscribe({
       next: (res) => {

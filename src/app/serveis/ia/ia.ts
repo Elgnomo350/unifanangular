@@ -3,6 +3,7 @@ import * as tmImage from '@teachablemachine/image';
 import { HttpClient } from '@angular/common/http';
 import { Usuaridades } from '../usuaridades/usuaridades';
 import { Manejarcistella } from '../manejarcistella/manejarcistella';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class Ia {
@@ -11,13 +12,15 @@ export class Ia {
   private webcam!: tmImage.Webcam;
   private running: boolean = false;
 
-  constructor(private http: HttpClient, private usuaridades: Usuaridades, private manejarcistella: Manejarcistella) {}
+  constructor(private http: HttpClient, private usuaridades: Usuaridades, private manejarcistella: Manejarcistella,
+    private router: Router
+  ) {}
 
   async start() {
     if (this.running) return;
     this.running = true;
 
-    const URL = 'app/modelia/';
+    const URL = '/modelia/';
 
     this.model = await tmImage.load(URL + 'model.json', URL + 'metadata.json');
 
@@ -59,6 +62,15 @@ export class Ia {
 
   private triggerLogout() {
     this.stop();
-    this.usuaridades.cerrarSesion(this.manejarcistella.gcistella);
+    this.usuaridades.cerrarSesion(this.manejarcistella.gcistella).subscribe({
+      next: () => {
+        alert("Tu sesión ha sido cerrada por un gesto obsceno")
+        this.usuaridades.limpiarUser()
+        this.router.navigate(["/registre"])
+      },
+      error: () => {
+        alert("No hagas gestos obscenos o te cerraremos la sesión")
+      }
+    })
   }
 }

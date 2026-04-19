@@ -68,6 +68,7 @@ export class Cistella implements OnInit{
 
   public borrarelement(index: number) {
     this.manejarcistella.eliminarProducto(index);
+    this.manejarcistella.updateCistellaCount()
   }
 
   public sumarUnaUnitat(index: number) {
@@ -75,6 +76,7 @@ export class Cistella implements OnInit{
 
     item.quantitatcomprada += 1;
     item.preutotal += item.preuperunitat;
+    this.manejarcistella.updateCistellaCount()
   }
 
   public restarUnaUnitat(index: number) {
@@ -87,5 +89,6 @@ export class Cistella implements OnInit{
 
     item.quantitatcomprada -= 1;
     item.preutotal -= item.preuperunitat;
+    this.manejarcistella.updateCistellaCount()
   }
 }
