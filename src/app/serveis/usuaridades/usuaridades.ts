@@ -57,7 +57,7 @@ public checkSessio() {
 }
 
 public borrarMiCuenta(){
-    return this.httpclient.delete<{mensaje: string, token: string}>("http://localhost:23000/borrarmicuenta", {withCredentials: true})
+    return this.httpclient.delete<{mensaje: string}>("http://localhost:23000/borrarmicuenta", {withCredentials: true})
 }
 
 public modificarDatos(campo: string, contenido: string){
