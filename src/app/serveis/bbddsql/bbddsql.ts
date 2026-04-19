@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { CistellaInterface } from '../manejarcistella/manejarcistella';
 
 @Injectable({
   providedIn: 'root',
@@ -39,7 +40,7 @@ export class Bbddsql {
     return this.productos
   }
 
-  public registrarCompra(productos: Record<string, any>){
+  public registrarCompra(productos: CistellaInterface[]){
     return this.httpclient.post<{mensaje: string}>(this.backurl + "registrarcompra", {productos: productos}, {withCredentials: true})
   }
 
