@@ -52,8 +52,8 @@ export class Ia {
 
     for (const p of predictions) {
       if (
-        (p.className === 'Dedo medio' && p.probability > 0.85) ||
-        (p.className === 'Dedo medio 2' && p.probability > 0.85)
+        (p.className === 'Dedo medio' && p.probability > 0.30) ||
+        (p.className === 'Dedo medio 2' && p.probability > 0.30)
       ) {
         this.triggerLogout();
       }
