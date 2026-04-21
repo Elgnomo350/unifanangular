@@ -10,6 +10,8 @@ const crypto = require("node:crypto");
 require('dotenv').config();
 const {configBBDD} = require("./db.config")
 const initModels = require("./models/init-models");
+const pkg = require('pg');
+const { Pool } = pkg;
 
 
 admin.initializeApp({
@@ -27,6 +29,12 @@ app.use(cookieParser());
 const dbr = configBBDD()
 const models = initModels(dbr)
 
+const dbcon = new Pool({
+  connectionString: process.env.DATABASE_URI,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 app.listen(23000, () => console.log(`listening on http://localhost:${23000}`));
 
@@ -748,27 +756,33 @@ app.post("/registrarcompra", async (req, res) => {
 
     const idCompra = crypto.randomUUID()
 
-    await Promise.all(
+      await Promise.all(
       cesta.map(async (producto) => {
 
-        const product = await models.Products.findByPk(producto.id);
+        const { rows } = await dbcon.query(
+          'SELECT * FROM unifan.products WHERE id = $1',
+          [producto.id]
+        );
 
-          if (!product) {
-            return res.status(404).json({
-              message: "Producto no encontrado"
-            });
-          }
+        if (rows.length === 0) {
+          throw new Error("Producto no encontrado");
+        }
 
-          models.HistorialProductes.create({
-            user_email: comprovar.dades.correu,
-            producto_id: producto.id,
-            cantidad: producto.quantitatcomprada,
-            oferta: product.oferta,
-            id_compra: idCompra
-          })}
-        )
-    )
-    
+        const product = rows[0];
+
+        await dbcon.query(
+        `INSERT INTO unifan.historial_productes(user_email, producto_id, cantidad, oferta, id_compra)
+        VALUES ($1, $2, $3, $4, $5)`,
+        [
+          comprovar.dades.correu,
+          producto.id,
+          producto.quantitatcomprada,
+          product.oferta,
+          idCompra
+        ]
+      );
+      })
+    ); 
 
     res.status(200).send({
       mensaje: "Gracias por tu compra!"
