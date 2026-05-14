@@ -828,7 +828,7 @@ app.get("/demanarimagen", async (req, res) => {
   try {
       const ruta = req.query.img
 
-      res.status(200).sendFile(path.join(__dirname, "assets", "img", ruta))
+      res.status(200).sendFile(path.join(__dirname, "assets", "img", ruta));
       
 
   } catch (error) {
