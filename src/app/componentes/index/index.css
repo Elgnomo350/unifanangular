@@ -3,7 +3,7 @@
     display: flex;
     align-content: center;
     justify-content: center;
-    background: url("/img/fondo-estrellas.jpg");
+    background: url("http://localhost:23000/demanarimagen?img=fondo-estrellas.jpg");
     background-size: cover;
     background-position: center;
     flex-direction: column;

@@ -3,6 +3,7 @@ import { Getroute } from '../../serveis/getroute/getroute';
 import { Router, RouterLink } from "@angular/router";
 import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
 import { Usuaridades } from '../../serveis/usuaridades/usuaridades';
+import { Getasset } from '../../serveis/getasset/getasset';
 
 @Component({
   selector: 'app-cistella',
@@ -19,7 +20,8 @@ export class Cistella implements OnInit{
     private manejarcistella: Manejarcistella,
     private router: Router,
     private usuaridades: Usuaridades,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private getasset: Getasset
   ) {
   }
 
@@ -32,6 +34,10 @@ export class Cistella implements OnInit{
 
   public cgetroute(path: string) {
     return this.getroute.getroute(path);
+  }
+
+  public cgetpath(path: string){
+      return this.getasset.getpath(path);
   }
 
   public getcistella() {
