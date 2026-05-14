@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Usuaridades } from '../usuaridades/usuaridades';
 import { Manejarcistella } from '../manejarcistella/manejarcistella';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class Ia {
@@ -20,9 +21,8 @@ export class Ia {
     if (this.running) return;
     this.running = true;
 
-    const URL = '/modelia/';
 
-    this.model = await tmImage.load(URL + 'model.json', URL + 'metadata.json');
+    this.model = await tmImage.load("http://localhost:23000/modelia/model.json", "http://localhost:23000/modelia/metadata.json");
 
     this.webcam = new tmImage.Webcam(300, 300, true);
     await this.webcam.setup();

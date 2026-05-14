@@ -56,7 +56,6 @@ public getAPIPost(){
   });
   }
 
-
   public cgetpath(path: string){
     return this.getasset.getpath(path);
   }

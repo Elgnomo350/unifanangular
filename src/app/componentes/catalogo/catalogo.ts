@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Getasset } from '../../serveis/getasset/getasset';
 import { Manejarcistella } from '../../serveis/manejarcistella/manejarcistella';
-import { Router } from '@angular/router';
 import { Bbddsql, Producte } from '../../serveis/bbddsql/bbddsql';
 
 @Component({
@@ -13,7 +12,7 @@ import { Bbddsql, Producte } from '../../serveis/bbddsql/bbddsql';
 export class Catalogo implements OnInit{
     private productos: Record<string, Producte[]>  = {}
 
-    constructor(private getasset: Getasset, private manejarcistella: Manejarcistella, private router: Router, 
+    constructor(private getasset: Getasset, private manejarcistella: Manejarcistella, 
     private bbddsql: Bbddsql, private cdr: ChangeDetectorRef){}
     
     ngOnInit(): void {

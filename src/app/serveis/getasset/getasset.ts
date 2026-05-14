@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -6,7 +7,10 @@ import { Injectable } from '@angular/core';
 
 export class Getasset {
 
-public getpath(path: string): string | null {
-  return `/${path}`;
+constructor(private httpclient: HttpClient){}
+
+public getpath(path: string) {
+  return "http://localhost:23000/demanarimagen?img=" + path;
 }
+
 }

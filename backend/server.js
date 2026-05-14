@@ -12,7 +12,8 @@ const {configBBDD} = require("./db.config")
 const initModels = require("./models/init-models");
 const pkg = require('pg');
 const { Pool } = pkg;
-
+const path = require("path");
+const fs = require("fs");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -821,3 +822,20 @@ app.get("/adminpanel", async (req, res) => {
     return;
   }
 })
+
+app.get("/demanarimagen", async (req, res) => {
+
+  try {
+      const ruta = req.query.img
+
+      res.status(200).sendFile(path.join(__dirname, "assets", "img", ruta));
+      
+
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+})
+
+app.use("/modelia", express.static(path.join(__dirname, "assets", "modelia")));
