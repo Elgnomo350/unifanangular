@@ -93,10 +93,21 @@ export class Footer {
           enviarEnter.disabled = false
           this.cdr.detectChanges()
         },
-        error: (err) => {
+        error: async (err) => {
           clearInterval(intervalo)
           this.chatMensajes.pop()
-          this.chatMensajes.push({text: "Lo siento, he tenido un error: " + err.error.message, enviatPer: 'ai'})
+
+          const texto = "Lo siento, he tenido un error: " + err.error.message
+          this.chatMensajes.push({text: "", enviatPer: 'ai'})
+
+          for (let index = 0; index < texto.length; index++) {
+              await new Promise(resolve => setTimeout(resolve, 30));
+
+              this.chatMensajes[this.chatMensajes.length-1].text = 
+              this.chatMensajes[this.chatMensajes.length-1].text + texto.charAt(index)  
+              this.cdr.detectChanges()
+          }
+
           btn.disabled = false
           enviarEnter.disabled = false
           this.cdr.detectChanges()
