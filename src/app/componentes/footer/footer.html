@@ -11,4 +11,29 @@
     <div class="footer-right">
         <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Creative commons: Yussef i Adriá</a>
     </div>
+
+<button class="chatbot-button" (click)="setVChat(!getVChat())">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" alt="Chatbot">
+</button>
+
+@if (getVChat()) {
+    
+    <div class="chat-popup">
+        <div class="chat-header">
+            <span>Chatbot</span>
+            <button class="close-btn" (click)="setVChat(false)">✕</button>
+        </div>
+
+        <div class="chat-body">
+              @for (m of getChatMensajes(); track m) {
+                <div [class.user]="m.enviatPer === 'user'" [class.ai]="m.enviatPer === 'ai'">{{m.text}}</div>
+            }
+        </div>
+
+        <div class="chat-input">
+            <input type="text" id="enviarChatbotEnter" placeholder="Escribe un mensaje..." [(ngModel)]="MsjChatbot" (keyup.enter)="enviarChatbot()">
+            <button id="enviarChatbot" (click)="enviarChatbot()">Enviar</button>
+        </div>
+    </div>
+}
 </footer>

@@ -14,6 +14,8 @@ const pkg = require('pg');
 const { Pool } = pkg;
 const path = require("path");
 const fs = require("fs");
+const GoogleGenAI = require("@google/genai")
+const Fuse = require("fuse.js")
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -36,6 +38,44 @@ const dbcon = new Pool({
     rejectUnauthorized: false
   }
 });
+
+const ai = new GoogleGenAI.GoogleGenAI({
+  apiKey: process.env.GEMINI_KEY
+});
+
+async function preguntarChatbot(consulta, contexto, chat) {
+  const response = ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      config: {
+        systemInstruction: `
+          Eres un asistente en la tienda de merchandising "Unifan".
+          Responderas a preguntas que los usuarios te hagan exclusivamente sobre la tienda.
+          Si no hay producto relacionado con la consulta responde con normalidad que no hay informacion sobre ese producto.
+          SOLAMENTE si estas confundido di: "No se la respuesta o he entendido mal la pregunta".
+          `,
+          thinkingConfig: {
+            thinkingBudget: 0
+          }
+      },
+      contents: `
+      Estos son los productos relacionados con esta pregunta que hayamos encontrado en nuestra base de datos:
+      ${contexto}
+
+      Si no has visto nada arriba es porque no hay productos relacionados con la pregunta que veras abajo
+
+      Este es el chat que has tenido con el usuario hasta ahora diciendo quien envio cada cosa:
+      ${chat}
+
+      "ai" eres tu, "user" es el usuario. 
+      Si solamente ves el mensaje de bienvenida enviado por ai y un mensaje de user es porque esta es su primera consulta, en ese caso se amable y agradecele por interesarse en unifan
+
+      El usuario pregunta: ${consulta}
+      `
+      });
+
+  return (await response).text;
+}
+
 
 app.listen(23000, () => console.log(`listening on http://localhost:${23000}`));
 
@@ -82,7 +122,7 @@ const usuarioSchema = z.object({
 });
 
 
-  const usuarioIniciarSesion = z.object({
+const usuarioIniciarSesion = z.object({
   correu: z.email({error: "Email con formato incorrecto, sigue el formato text@text.text"}),
   passwd: z.string({error: "Has puesto algo invalido como contraseña."})
 });
@@ -839,3 +879,142 @@ app.get("/demanarimagen", async (req, res) => {
 })
 
 app.use("/modelia", express.static(path.join(__dirname, "assets", "modelia")));
+
+
+const consultaform = z.object({
+  nom: z.string().min(1, "El nombre es obligatorio"),
+  correu: z.email("Email no válido"),
+  consulta: z.string()
+});
+
+app.post("/hacerconsulta", async (req, res) => {
+
+  try {
+    if (!req.body.correu || !req.body.nom || !req.body.consulta) {
+      return res.status(400).json({message: "Te faltan campos."})
+    }
+
+    if (!req.body.captcha) {
+    return res.status(400).json({ message: "Falta el captcha" });
+    }
+
+    const result = consultaform.safeParse(req.body);
+
+    if (!result.success) {
+      return res.status(400).json({
+        message: "Ha habido un error: " + result.error.flatten(),
+      });
+    }
+
+    const verifyResponse = await fetch(
+      "https://www.google.com/recaptcha/api/siteverify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+          secret: process.env.CAPTCHA_KEY,
+          response: req.body.captcha
+        })
+      }
+    );
+
+    const data = await verifyResponse.json();
+
+    if (!data.success) {
+      return res.status(400).json({ message: "Captcha inválido" });
+    }
+
+    const { nom, correu, consulta } = result.data;
+    const nomarxiu = correu + "_" + crypto.randomUUID() + ".txt"
+
+    fs.writeFileSync(path.join(__dirname, "assets", "consultas", nomarxiu), 
+    "Nombre: " + nom + 
+    "\nEmail: " + correu + 
+    "\nConsulta: " + consulta +
+    "\nFecha: " + new Date().toISOString())
+
+    return res.status(200).json({mensaje: "Consulta recibida con exito!"})
+    
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+
+})
+
+const ChatMessageSchema = z.object({
+  text: z.string(),
+  enviatPer: z.enum(["user", "ai"])
+});
+
+
+const consultaIA = z.object({
+  consulta: z.string({
+    required_error: "La consulta es obligatoria",
+    invalid_type_error: "La consulta debe ser un texto"
+  }).min(1, "La consulta no puede estar vacía").trim(),
+
+  chat: z.array(ChatMessageSchema)
+})
+
+app.post("/chatbot", async (req, res) => {
+
+  try {
+
+    const result = consultaIA.safeParse(req.body);
+    if (!result.success) {
+      const errorTree = z.treeifyError(result.error);
+      const error = Object.keys(errorTree.properties)[0]
+
+      res.status(400).json({message: "Error: " + errorTree.properties[error].errors[0]});
+      return;
+    }
+    const { consulta, chat } = result.data;
+
+    const productos = await models.Products.findAll()
+
+    const corregir = await new Fuse(productos, {
+        keys: ["nombre", "descripcion", "precio", "categoria"]
+    })
+
+      const resultados = corregir.search(consulta).map(r => r.item)
+      const contexto = resultados.map(p => `
+        Nombre: ${p.nombre}
+        Descripcion: ${p.descripcion}
+        Precio: ${p.precio}€
+        Categoría: ${p.categoria}
+        Oferta: ${p.oferta ? "Sí" : "No"}
+        `).join("\n---\n")
+
+      let historialChat = ``
+
+        chat.forEach(mensaje => {
+          if (mensaje.enviatPer === "ai") {
+            historialChat = historialChat + `
+            ------------------------------
+            `
+          }
+          historialChat = historialChat + 
+          `
+          ${mensaje.enviatPer}: ${mensaje.text}
+          `
+          if (mensaje.enviatPer === "user") {
+            historialChat = historialChat + `
+            ------------------------------
+            `
+          }
+        })
+      res.status(200).json({
+        respuesta: await preguntarChatbot(consulta, contexto, historialChat)
+      })
+
+  } catch (error) {
+    const err = error.message
+    res.status(500).json({ message: "Ha habido un error: " + err });
+    return;
+  }
+    
+})

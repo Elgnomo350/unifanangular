@@ -3,8 +3,7 @@ import * as tmImage from '@teachablemachine/image';
 import { HttpClient } from '@angular/common/http';
 import { Usuaridades } from '../usuaridades/usuaridades';
 import { Manejarcistella } from '../manejarcistella/manejarcistella';
-import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router'; 
 
 @Injectable({ providedIn: 'root' })
 export class Ia {
@@ -73,4 +72,13 @@ export class Ia {
       }
     })
   }
+
+  public enviarChatbot(consulta: string, chat: ChatMessage[]){
+    return this.http.post<{respuesta: string}>("http://localhost:23000/chatbot", {consulta: consulta, chat: chat})
+  }
+}
+
+export interface ChatMessage {
+  text: string;
+  enviatPer: 'user' | 'ai';
 }
