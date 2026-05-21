@@ -45,7 +45,7 @@ export class Footer {
     this.mensajeChatbot = v;
   }
 
-  public enviarChatbot(){
+  public async enviarChatbot(){
   const btn = document.getElementById("enviarChatbot") as HTMLButtonElement;
   const enviarEnter = document.getElementById("enviarChatbotEnter") as HTMLInputElement;
   
