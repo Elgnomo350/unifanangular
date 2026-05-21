@@ -20,5 +20,31 @@
                 <span>Lunes a Viernes · 9:00 - 18:00</span>
             </li>
         </ul>
+
+        <br>
+
+        <form class="form-contacte" (ngSubmit)="enviarConsulta(correu.value, nom.value, consulta.value)">
+            <h2>Tienes una duda? Escribenos</h2>
+            
+            <div class="campo">
+                <label for="nom">Nombre</label>
+                <input type="text" #nom id="nom" name="nom" placeholder="Tu nombre" required>
+            </div>
+
+            <div class="campo">
+                <label for="correu">Correo electrónico</label>
+                <input type="email" id="correu" #correu name="correu" placeholder="tuemail@ejemplo.com" required>
+            </div>
+
+            <div class="campo">
+                <label for="consulta">Consulta</label>
+                <textarea id="consulta" #consulta name="consulta" rows="7" placeholder="Escribe tu consulta..." required></textarea>
+            </div>
+
+            <re-captcha siteKey="6Lc_JvAsAAAAAGo56PeY1YJSz_PmnRUy3s69Zic-" (resolved)="onCaptchaResolved($event)"></re-captcha>
+
+            <button type="submit">Enviar</button>
+            <button type="reset">Reset</button>
+        </form>
     </div>
 </main>

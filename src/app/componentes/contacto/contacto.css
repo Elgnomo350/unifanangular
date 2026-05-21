@@ -55,3 +55,58 @@ ul li:hover {
     cursor: pointer;
 }
 
+.form-contacte {
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+    text-align: left;
+}
+
+.form-contacte h2 {
+    text-align: center;
+    color: white;
+    margin-bottom: 1em;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+}
+
+.campo label {
+    color: #e8dada;
+    font-size: 1em;
+}
+
+.campo input,
+.campo textarea {
+    padding: 0.8em;
+    border-radius: 0.8em;
+    border: 1px solid #8b0000;
+    background: #1a0000;
+    color: #ffcccc;
+    outline: none;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+    box-shadow: 0 0 10px rgba(139, 0, 0, 0.6);
+}
+
+.form-contacte button {
+    padding: 0.9em;
+    border: none;
+    border-radius: 1em;
+    background: darkred;
+    color: white;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.form-contacte button:hover {
+    transform: scale(1.03);
+    background: #a30000;
+}
