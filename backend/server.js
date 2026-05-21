@@ -58,10 +58,9 @@ async function preguntarChatbot(consulta, contexto, chat) {
           }
       },
       contents: `
-      Estos son los productos relacionados con esta pregunta que hayamos encontrado en nuestra base de datos:
+      Esta es la base de datos para que puedas informarte de los productos y responder:
       ${contexto}
 
-      Si no has visto nada arriba es porque no hay productos relacionados con la pregunta que veras abajo
 
       Este es el chat que has tenido con el usuario hasta ahora diciendo quien envio cada cosa:
       ${chat}
@@ -974,20 +973,16 @@ app.post("/chatbot", async (req, res) => {
     }
     const { consulta, chat } = result.data;
 
-    const productos = await models.Products.findAll()
+    const productos = await models.Products.findAll({raw: true})
 
-    const corregir = await new Fuse(productos, {
-        keys: ["nombre", "descripcion", "precio", "categoria"]
-    })
-
-      const resultados = corregir.search(consulta).map(r => r.item)
-      const contexto = resultados.map(p => `
+      const contexto = productos.map(p => `
         Nombre: ${p.nombre}
         Descripcion: ${p.descripcion}
         Precio: ${p.precio}€
         Categoría: ${p.categoria}
         Oferta: ${p.oferta ? "Sí" : "No"}
         `).join("\n---\n")
+
 
       let historialChat = ``
 
