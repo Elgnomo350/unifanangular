@@ -31,7 +31,8 @@
         </div>
 
         <div class="chat-input">
-            <input type="text" id="enviarChatbotEnter" placeholder="Escribe un mensaje..." [(ngModel)]="MsjChatbot" (keyup.enter)="enviarChatbot()">
+            <input type="text" id="enviarChatbotEnter" placeholder="Escribe un mensaje..." [(ngModel)]="MsjChatbot" 
+            (keyup.enter)="enviarChatbot()">
             <button id="enviarChatbot" (click)="enviarChatbot()">Enviar</button>
         </div>
     </div>
