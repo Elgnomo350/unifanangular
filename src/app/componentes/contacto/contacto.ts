@@ -32,7 +32,7 @@ export class Contacto {
         alert(res.mensaje)
       },
       error: (err) => {
-        alert(err.error.message)
+        alert(err.message)
       }
     })
   }
